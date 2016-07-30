@@ -1,0 +1,503 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>RealRobotDataView</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>RealRobotDataView</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>379</width>
+            <height>206</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>RobotData</string>
+    </property>
+    <widget class="QTabWidget">
+        <property name="name">
+            <cstring>tabWidgetData</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>360</width>
+                <height>190</height>
+            </rect>
+        </property>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <attribute name="title">
+                <string>Allgemein</string>
+            </attribute>
+            <widget class="QLCDNumber">
+                <property name="name">
+                    <cstring>lCDNumberVers</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>290</x>
+                        <y>10</y>
+                        <width>16</width>
+                        <height>20</height>
+                    </rect>
+                </property>
+                <property name="lineWidth">
+                    <number>0</number>
+                </property>
+                <property name="numDigits">
+                    <number>1</number>
+                </property>
+            </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel1</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>160</x>
+                        <y>10</y>
+                        <width>122</width>
+                        <height>17</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Board Version ID:</string>
+                </property>
+            </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabel1_2</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>160</x>
+                        <y>30</y>
+                        <width>65</width>
+                        <height>17</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>ID String:</string>
+                </property>
+            </widget>
+            <widget class="QLabel">
+                <property name="name">
+                    <cstring>textLabelIDString</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>160</x>
+                        <y>50</y>
+                        <width>190</width>
+                        <height>20</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>IDString</string>
+                </property>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox3</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>110</width>
+                        <height>150</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Motor Vcc (V)</string>
+                </property>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberVcc</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetVcc</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <attribute name="title">
+                <string>Temperatur</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox7</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>340</width>
+                        <height>150</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Motor Temperatur (°C)</string>
+                </property>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberTemp1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetT1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetT2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>120</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetT3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>230</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberTemp3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>230</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberTemp2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>120</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>TabPage</cstring>
+            </property>
+            <attribute name="title">
+                <string>Ströme</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox7_2</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>340</width>
+                        <height>150</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Motor Ströme (A)</string>
+                </property>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetC1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberC1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberC2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>120</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetC2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>120</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberC3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>230</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetC3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>230</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>TabPage</cstring>
+            </property>
+            <attribute name="title">
+                <string>PWM</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox7_3</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>0</y>
+                        <width>340</width>
+                        <height>160</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>PWM Output (%)</string>
+                </property>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberO1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberO2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>120</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLCDNumber">
+                    <property name="name">
+                        <cstring>lCDNumberO3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>230</x>
+                            <y>20</y>
+                            <width>90</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetO1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetO2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>120</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="ValPlotWidget">
+                    <property name="name">
+                        <cstring>ValPlotWidgetO3</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>230</x>
+                            <y>40</y>
+                            <width>90</width>
+                            <height>100</height>
+                        </rect>
+                    </property>
+                </widget>
+            </widget>
+        </widget>
+    </widget>
+</widget>
+<customwidgets>
+    <customwidget>
+        <class>ValPlotWidget</class>
+        <header location="local">valplotwidget.h</header>
+        <sizehint>
+            <width>-1</width>
+            <height>-1</height>
+        </sizehint>
+        <container>0</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+    </customwidget>
+</customwidgets>
+<images>
+    <image name="image0">
+        <data format="XBM.GZ" length="79">789c534e494dcbcc4b554829cdcdad8c2fcf4c29c95030e0524611cd48cd4ccf28010a1797249664262b2467241641a592324b8aa363156c15aab914146aadb90067111b1f</data>
+    </image>
+</images>
+<includes>
+    <include location="local" impldecl="in declaration">../../Structures/RobotData.h</include>
+    <include location="local" impldecl="in declaration">valplotwidget.h</include>
+    <include location="local" impldecl="in implementation">realrobotdataview.ui.h</include>
+</includes>
+<slots>
+    <slot>update( const Tribots::RobotData &amp; rd )</slot>
+</slots>
+<functions>
+    <function>init()</function>
+</functions>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+    <includehint>valplotwidget.h</includehint>
+</includehints>
+</UI>

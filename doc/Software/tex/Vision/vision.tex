@@ -1,0 +1,284 @@
+\documentclass[11pt,a4paper,twocolumn]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{german}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{geometry}
+
+\title{Bilderzeugung und Bildverarbeitung}
+\author{Sascha Lange}
+
+
+\geometry{
+  body={15.8cm, 24.3cm},
+  left=2.8cm,
+  top=2.5cm
+}
+
+\sloppy
+
+\begin{document}
+\maketitle
+
+\section{Bilderzeugung}
+
+\subsection{Übersicht}
+
+Bilder werden im Computer zumeist in Arrays von Farbwerten unterschiedlicher
+Farbräume kodiert und können
+von verschiedensten Geräten (Scanner, Kamera, Festplatte) bezogen werden.
+Bei der Planung des Bilderzeugungsmoduls mußten dementsprechend zwei 
+wesentliche Problembereiche bedacht werden:
+\begin{itemize}
+\item Als Bildquelle kommen für das robotcontrol-Programm unterschiedliche 
+      Geräte in Frage. So sind die Roboter derzeit mit 1 bis 2 
+      Firewire-Kameras eines Typs ausgerüstet. In Zukunft sollen aber auch 
+      Geräte anderer Hersteller oder Standards eingebunden werden können.
+      Außerdem muss es zu Debuggingzwecken möglich sein, vorab aufgezeichnete
+      Bildströme von der Festplatte einspeisen zu können. Die Implementierung
+      muss also nach außen {\it geräteunabhängig} sein.
+\item Für die Speicherung und Verarbeitung der Bilder kommen unterschiedliche
+      Farbräume in Frage. Während für die Anzeige auf dem Bildschirm in der
+      Regel der RGB-Farbraum verwendet wird, liefern die meisten Kameras
+      Bilder im YUV-Format. Für die spätere Bildverarbeitung kann wiederum
+      ein anderer Farbraum wie z.B. der HSV-Farbraum günstiger sein. Das
+      Modul muss also Bilder {\it farbraumunabhängig} beziehen und 
+      bereitstellen können.
+\end{itemize}
+
+Um eine geräteunabhängige Bilderzeugung zu gewährleisten, wurde das Modul
+in zwei Schichten implementiert: Die untere Schicht bilden die 
+Implementierungen des Interfaces {\it ImageSource}, die die Initialisierung
+und die Kommunikation mit der Hardware kapseln. Darüber befindet sich die
+Geräteunabhängige Schicht der {\it ImageProducer}. Jedes Gerät 
+({\it ImageSource}) wird von je einer Instanz der Klasse {\it ImageProducer}
+ummantelt, die im wesentlichen geräteunabhängige Verwaltungsaufgaben wie
+die Konvertierung von Bildformaten übernimmt.
+
+Geräte liefern ihre Bilder beim Rechner in unterschiedlichen Farbräumen und
+Kodierungen ab. Die spätere Bildverarbeitung soll nicht von der Verwendung
+eines bestimmten Gerätes abhängig sein und muss daher von dem tatsächlich
+erzeugten Bildformat unabhängig sein. Daher ist es früher oder später 
+notwendig, die von einem Gerät erzeugten Bilder in ein einheitliches Format
+umzuwandeln. Diese Umwandlung kann allerdings einen erheblichen 
+Flaschenhals darstellen, da hierfür jedes Pixel angefaßt werden muss. Unter
+Umständen kann es sinnvoll sein, nicht ganze Bilder, sondern nur die (wenigen)
+benötigten Pixel auf Anfrage umzuwandeln. Am schnellsten ist es natürlich 
+allerdings, wenn gar keine Umwandlungen nötig sind und erzeugtes Format und
+von der Bildverarbeitung erwartetes Format übereinstimmen.
+
+Da sich nicht allgemein klären läßt, ob eine Umwandlung des ganzen Bildes oder
+nur einzelner Pixel zu bevorzugen ist (hängt von der Anzahl und Häufung der
+Pixelzugriffe ab), wurde hier ein Zwischenweg beschritten, der größtmöglichen
+Komfort bei größtmöglicher Schnelligkeit bieten soll. Bei der vorliegenden 
+Implementierung kann das verwendete einheitliche Bildformat in den 
+Konfigurationsdateien auf die verwendeten Bildquellen und die Algorithmen
+abgestimmt werden, um die maximale Performance zu erreichen.
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics{bildfluss.eps}
+\caption{Fluß der Bilddaten vom Gerät durch das Bilderzeugungsmodul.}
+\label{fig:dataflow}
+\end{center}
+\end{figure}
+
+Die ``Gerätetreibter'' ({\it ImageSource}) liefern hierbei den Bildspeicher im
+nativen Format des Geräts ab (s. Abb. \ref{fig:dataflow}). Falls möglich, 
+wird der Bildspeicher nicht 
+kopiert sondern nur um einen einfachen Header, der Informationen über 
+die Bildgröße und das Format der Daten enthält, ergänzt. Diese nativen
+Bildspeicher werden anschließend vom {\it ImageProducer} in das ausgewählte
+gemeinsame Format umgewandelt (derzeit meist YUV). Hierzu stehen diverse
+Konvertierungsfunktionen zur Verfügung. Sind natives und gemeinsames Format
+identisch, ist keine Umwandlung nötig. Der nun im allgemeinen Format 
+vorliegende Bildspeicher wird mit einem Wrapper ({\it Image} umgeben
+(mögliche Formate siehe Tab. \ref{tab:imagewrapper}).
+
+\begin{table}[!htb]
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+         & RGB & YUV & UYV & UYVY \\
+\hline
+Wrapper  & X   & X   &     & X \\
+\hline
+\end{tabular}
+\caption{Für die markierten nativen Formate sind {\it Image}-Wrapperklassen
+         implementiert. Die Namen der Klasse ergeben sich direkt aus dem 
+         Farbraum, z.B. {\it RGBImage}\label{tab:imagewrapper}}
+\end{table}
+
+Benutzer des Bilderzeugungsmoduls greifen nur über diesen abstrakten 
+Wrapper auf den darunterliegenden Bildspeicher zu. Die Wrapperklasse bietet
+hierzu abstrakte Methoden, die den Zugriff in einem bestimmten Farbraum
+erlauben. Derzeit kann man Pixel als RGB-, YUV- oder UYVY-Wert lesen und
+schreiben. Somit ist für alle Bildverarbeitungsalgorithmus ein vom verwendeten
+Speicherformat unabhängiger Zugriff möglich, der natürlich am schnellsten ist,
+wenn angefragter und zur Speicherung verwendeter Farbraum übereinstimmen. 
+Prinzipiell ist es so nun möglich, das Format der Bildspeicher beliebig
+auszutauschen.
+
+Neben den Zugriffsmethoden kann der Bildklasse noch ein {\it ColorClassifier}
+übergeben werden. Anschließend können statt der Farbwerte der Pixel auch 
+direkt Farbklassen abgefragt werden. Hierzu kann der ColorClassifier auch 
+auf den internen {\it ImageBuffer} zugreifen und kann so unter Umständen
+Konvertierung verhindern (z.B. bei Verwendung eines {\it YUVImage} in 
+Verbindung mit einer {\it YUVLookupTable}).
+
+{\it Im Moment wird das zu verwendende Format einheitlich für erste und zweite
+     Bildquelle gesetzt. Für die Zukunft ist es besser, diese Formatangabe
+     an die {\it ImageProducer} zu binden, um bei unterschiedlichen Geräten
+     und Algorithmen je die individuell schnellste Lösung auswählen zu können.}
+
+\subsection{Erläuterung einzelner Einrichtungen}
+
+\subsubsection{ImageBuffer}
+
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{image.eps}
+\caption{Bildklasse}
+\label{fig:image}
+\end{center}
+\end{figure*}
+
+In Abbildung \ref{fig:image} ...
+
+\subsubsection{Image}
+
+\subsubsection{Farbraumkonvertierung}
+
+\begin{table}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+        & RGB     & YUV     & UYV     & UYVY \\
+\hline
+RGB     &         &   X     &         & X    \\
+\hline 
+YUV     &   X     &         &         & X    \\
+\hline
+UYV     &         &         &         &\\
+\hline
+UYVY    &         &         &         &\\
+\hline
+\end{tabular}
+\caption{Implementierte Farbraum\-um\-wandlungen auf Pixelebene (Klasse 
+         { \it PixelConversion }). Waagerecht das
+         Quellformat, senkrecht das Zielformat}
+\label{tab:pixelConversions}
+\end{table}
+
+\begin{table}
+\begin{tabular}{|l|c|c|c|c|}
+\hline
+        & RGB     & YUV     & UYV     & UYVY \\
+\hline
+RGB     &         & X       & X       & X\\
+\hline
+YUV     &         &         &         & X\\
+\hline
+UYV     &         &         &         & \\
+\hline
+UYVY    &         &         &         & \\
+\hline
+\end{tabular}
+\caption{Implementierte Farbraum\-um\-wandlungen auf Bildpufferebene
+         (Implementierungen des Interfaces
+         { \it ImageConverter }).Die entsprechenden 
+         Konverterklassen sind nach dem Schema VON2NACH benannt. 
+         RGB2YUV konvertiert also Bilder aus dem RGB Farbraum in den 
+         YUV-Farbraum. Waagerecht das Quellformat, senkrecht das Zielformat}
+\label{tab:imageConversions}
+\end{table}
+
+\subsubsection{Geräteschnittstelle ImageSource}
+
+\paragraph{IIDC}
+
+\paragraph{FileSource}
+
+\subsubsection{Geräteunabhängige Bildquelle ImageProducer}
+
+\subsubsection{MultiImageProducer}
+
+\begin{figure*}
+\begin{center}
+\includegraphics[width=\textwidth]{imagesources.eps}
+\caption{Bilderzeugung}
+\label{fig:imagesources}
+\end{center}
+\end{figure*}
+
+
+\section{Bildverarbeitung}
+
+
+\subsection{Parameter}
+
+\begin{table*}[!htp]
+\begin{tabular}{|p{4cm}|p{4cm}|p{6.5cm}|}
+\hline
+Parameter          & Werte & Beschreibung \\
+\hline
+obstacle\_detector & SimpleObstacleDetector & Gibt an, welcher Algorithmus zum Finden der Hindernisse verwendet werden soll \\
+\hline
+inner\_scan\_radius& Pixel & Der Radius des Kreises um den Bildmittelpunkt, ab
+                             dessen Grenze die radialen Scanlinien beginnen 
+                             sollen. Sollte etwas kleiner(!) als die Linse
+                             sein, wenn eine Robotermaske verwendet wird. \\
+\hline
+outer\_scan\_radius& Pixel  & Der Radius des äußeren Kreises, bei dessen 
+                             Kante die Scanlinien aufhören sollen. \\
+\hline
+number\_of\_scanlines& int >0 & Die Anzahl der Scanlinien, die pro 
+                              Quadranten erzeugt werden sollen \\
+\hline
+min\_line\_width   & mm     & Die minimale Breite der Linien in mm, die 
+                              vom Liniendetektor nicht herausgefiltert
+                              werden sollen. \\
+\hline
+max\_line\_width   & mm     & Die maximale Breite der Linien in mm, die nicht
+                              herausgefiltert werden sollen. Da die Linien
+                              von den Scanlinien selten senkrecht geschnitten
+                              werden, sollte dieser Wert um einiges größer als
+                              die tatsächliche Breite der Linien sein. \\
+\hline
+\end{tabular}
+\caption{Parameter der ``ScanLine''-Bildverarbeitung. Anzugeben in der Sektion
+         ScanLine.}
+\end{table*}
+
+
+
+\section{ToDo}
+
+Mit der aktuellen Implementierung steht eine rudimentäre aber bereits 
+funktionsfähige und 
+schnelle Bildverarbeitung bereit. Es ist zudem möglich, Bilder in 
+unterschiedlichen Formaten von verschiedenen Bildquellen zu beziehen und 
+einheitlich zu verarbeiten. Es bleibt aber noch einiges zu tun (siehe
+Tab. \ref{tab:todo}).
+
+\begin{table*}[!bht]
+\begin{tabular}{|p{13cm}|c|}
+\hline
+Beschreibung                            & Priorität \\
+\hline
+Fehlende Pixelumwandlungsfunktionen nach YUV implementieren & niedrig \\
+\hline
+Fehlende Pixelumwandlungsfunktionen zu anderen Formaten als YUV 
+implementieren & sehr niedrig \\
+\hline
+Fehlende Bildumwandlungsfunktionen nach YUV implementieren & mittel \\
+\hline
+Fehlende Bildumwandlungsfunktionen zu anderen Formaten als YUV
+implementieren & niedrig \\
+\hline
+Die Umwandlung vom nativem ins allgemeine Format an die einzelnen ImageProducer
+binden (beste Lösung kann sich bei 1. und 2. Bildquelle unterscheiden) 
+& niedrig \\
+\end{tabular}
+\caption{ToDo-Liste Computer Vision\label{tab:todo}}
+\end{table*}
+
+\end{document}

@@ -1,0 +1,134 @@
+
+\section{Tools}
+\label{sec:tools}
+
+\subsection{RemoteClient}
+\label{subsec:remoteclient}
+
+\textit{RemoteClient} ist ein Programm, das auf einem Standrechner gestartet
+zur Steuerung und Kommunikation mit dem Notebook auf dem Roboter
+dient. Nach Aufbau einer WLAN-Verbindung durch Auswahl des Rechners,
+auf dem \textit{robotcontrol} gestartet wurde, wird eine
+UDP-Verbindung aufgebaut.
+
+NN
+
+
+
+\subsection{Tribotsview}
+\label{subsec:tribotsview}
+
+Das Programm \textit{Tribotsview} dient der Visualisierung
+abgespeicherter Trajektorien und Debuginformation. Das Programm wird
+mit zwei Argumenten gestartet: (a) dem Präfix der Logdateien sowie (b)
+der Konfigurationsdatei, die zumindest die Spielfeldgeometrie
+enthalten muss. Nach dem Start wird das Tribotsview-Fenster angezeigt,
+das aus der Darstellung des Feldes, der textuellen Debugausgabe sowie
+der Statusinformationsleiste besteht. Nun kann die aufgezeichnete
+Trajektorie Zyklus für Zyklus abgefahren werden.
+
+In der Felddarstellung werden verschiedene Informationen angezeigt,
+die wahlweise ein- und ausgeschaltet werden können:
+\begin{itemize}
+\item Roboter und Robotergeschwindigkeit (translatorisch) in türkis
+\item im Weltmodell verwalteter Ball mit Ballgeschwindigkeit in rot
+\item im Weltmodell verwaltete Hindernisse in schwarz
+\item durch die Bildverarbeitung erkannte Liniensegmente als hellgraue
+  Kreise markiert
+\item durch die Bildverarbeitung erkannten Ball als dunkelrot
+  gebrochener Kreis
+\item durch die Bildverarbeitung erkannte Hindenisse in grau
+\item durch die Bildverarbeitung erkannte Tore als gelber und blauer
+  Kreis markiert
+\item Suchpositionen der Selbstlokalisierung in dunkelblau. Diese
+  Funktion ist optional und kann in verschiedener Weise genutzt werden
+  z.B. zur Markierung von Suchpositionen der Bildverarbeitung oder
+  früheren Ballpositionen. Angezeigt werden jeweils die Informationen
+  aus den *.ppos-Dateien
+\item Spur des Roboters als türkise gebrochene Linie
+\item Spur des Balls als rote gebrochene Linie
+\item die in der *.log-Datei eingetragenen Linienelemente
+\end{itemize}
+Darüber hinaus können mit \textsl{Shift-Rechte Maustaste} Punkte und
+Linien eingezeichnet werden, die erst durch Betätigen des Symbols
+"`violette Tonne"' gelöscht werden.
+
+Durch die Prädiktion von Roboter- und Ballposition durch das
+Weltmodell entsteht eine Diskrepanz zwischen dem Zeitpunkt
+derDarstellung und dem Alter der Bildinformationen. Dadurch kann es zu
+leichten Verschiebungen kommen, vor allem bei schnellen
+Rotationsbewegungen. Durch Betätigen des Uhrsymbols werden Roboter-
+und Ballposition um diese zeitliche Diskrepanz zurückgerechnet.
+
+Auf der Statusleiste im rechten Teil des Tribotsfensters befindet sich
+eine kreisrunde Anzeige, die drei Informationen darstellt: die
+Ausrichtung des Roboters, die Rotationsgeschwindigkeit sowie die
+Richtung des Balls relativ zum Roboter. 
+
+\textit{Tribotsview} ermöglicht das Versetzen des Roboters mit der
+Maus auf eine beliebige Position des Spielfeldes
+(\textsl{Control-Linke Maustaste}). Diese Funktion dient dem Testen
+alternativer Roboterpositionen. Eine solche Positionsänderung kann
+durch Betätigen des Büroklammersymbols dauerhaft gespeichert werden,
+so dass die geänderte Position bei vor- und zurückschalten nicht
+verloren geht.
+
+Die Steuerung von \textit{Tribotsview} ist auch per Tastatur
+möglich. Folgende Befehle stehen zur Verfügung:
+\begin{center}
+\begin{tabular}{ll}
+\hline
+Taste & Funktion \\
+\hline
++ & vergrößern \\
+- & verkleinern \\
+a & gesamtes Feld darstellen \\
+Backspace & zu letztem Bildausschnitt zurückkehren \\
+Return & Bildausschnitt wiederherstellen (Redo) \\
+$\rightarrow$,$\leftarrow$,$\uparrow$,$\downarrow$ & Bildauschschnitt
+verschieben \\
+\hline
+Space & Trajektorie anhalten \\
+p (previous) & letzten Zyklus anzeigen \\
+n (next) & nächsten Zyklus anzeigen \\
+g (go) & Trajektorie vorwärts abspielen \\
+b (backward) & Trajektorie rückwärts abspielen \\
+f (fast forward) & Trajektorie vorspulen \\
+r (rewind) & Trajektorie zurückspulen \\
+\hline
+t (trace) & Roboterspur an/abstellen \\
+\hline
+\end{tabular}
+\end{center}
+
+Mit Hilfe der Maus sind folgende Kommandos möglich:
+\begin{center}
+\begin{tabularx}{\textwidth}{lX}
+\hline
+Taste & Funktion \\
+\hline
+Linke Maustaste & Bildausschnitt verschieben \\
+Rechte Maustaste & Ausschnittsvergrößerung \\
+Shift-Linke Maustaste & Koordinaten einer Position, Richtung und Länge
+einer Strecke anzeigen \\
+Shift-Rechte Maustaste & Punkte oder Strecken dauerhaft markieren \\
+Control-Linke Maustaste & Roboter versetzen \\
+Control-Rechte Maustaste & SL-Fenster öffnen \\
+\hline
+\end{tabularx}
+\end{center}
+
+Mit Hilfe des SL-Fensters kann der Slebstlokalisierungsalgorithmus
+optimiert werden. Für den ausgewählten Ausschnitt wird die
+Fehlerlandschaft der Selbstlokalisierung angezeigt, d.h. die
+Diskrepanz zwischen gesehenen Liniensegmenten und Modelllinien. Helle
+Stellen markieren einen geringen Fehler, dunkle einen großen. Es wird
+stets von einer optimalen Orientierung des Roboters ausgegangen. Der
+türkise Kreis markiert die gegenwärtige Roboterposition, der blaue die
+optimale Position. Der magenta Kreis gibt die Position an, die durch
+einige Optimierungsschritte aus der türkisen hervorgegangen ist. Durch
+Klicken in das SL-Fenster wird der Roboter an die entsprechende Stelle
+versetzt. \textsl{Revert all} berechnet die Fehlerlandschaft neu,
+\textsl{Revert pos} übernimmt eine neue Roboterposition aus dem
+Hauptfenster ohne die Fehlerlandschaft neu zu berechnen.
+

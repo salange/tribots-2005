@@ -1,0 +1,332 @@
+
+\section{Grundstruktur}
+\label{sec:grundstruktur}
+
+\subsection{Aufbau von \textit{robotcontrol}}
+\label{subsec:aufbau_robotcontrol}
+
+Die Programmstruktur von \textit{robotcontrol} besteht aus vier
+Softwareschichten, die aufeinander aufbauen (siehe Abb. \ref{fig:schichtung}):
+\begin{enumerate}
+\item einer Schicht mit bibliotheksartiger Funktionalität, die
+  unspezifisch für die Roboterprogrammierung ist. Diese Funktionen
+  stehen allen anderen Schichten und Komponenten zur
+  Vefügung. Beispiele sind die Vektor- und Winkelklassen,
+  Geometrieberechnungen und die Zeitklasse. Unterverzeichnis \texttt{src/Fundamental}.
+\item einer Schicht mit Strukturen, die zur Übermittelung von
+  Informationen zwischen einzelnen Softwarekomponenten dienen. Diese
+  Strukturen haben i.d.R. wenig algorithmische Funktionalität sondern
+  sind i.W. Informationssammlungen. Beispiele sind Strukturen zur
+  Repräsentation eines Fahrtvekektors oder der
+  Spielfeldgeometrie. Unterverzeichnis \texttt{src/Structures}.
+\item der Komponentenschicht, in der die wesentliche Funktionalität
+  der Software realisiert wird. Es wurden vier Komponenten definiert,
+  die einzelne Teilaufgaben lösen und die durch schmale Schnittstellen
+  charakterisiert werden. Dies sind:
+\begin{itemize}
+\item die Roboterkomponente (Unterverzeichnis \texttt{src/Roboter})
+  übernimmt die Kommunikation mit dem Motorkontroller, rechnet
+  zwischen Roboterkoordinatensystem und Radgeschwindigkeiten um, setzt
+  die Fahrbefehle um und liest die Odometriewerte aus.
+\item die Bildverarbeitungskomponente (Unterverzeichnis
+  \texttt{src/ImageProcessing}) kommuniziert mit der Kamera und wertet
+  die Kamerabilder aus.
+\item Die Spielerkomponente (Unterverzeichnis \texttt{src/Player})
+  realisiert das Verhalten des Roboters, d.h. die Situationsanalyse,
+  Strategie, Bahnplanung und Umsetzung in Fahrbefehle und greift dazu
+  auf einen Fundus von Verhaltensweisen (Unterverzeichnis
+  \texttt{src/Behavior}) zurück.
+\item Das Weltmodell (Unterverzeichnis \texttt{WorldModel}) übernimmt
+  die Fusion der verschiedenen Sensorinformationen. Es bereitet die
+  dabei ermittelten Informationen auf und stellt die aufbereiteten
+  Informationen den anderen Komponenten zur Verfügung. Wesentliche
+  Aufgaben sind die Selbstlokalisation, Berechnung von Ballposition
+  und -geschwindigkeit sowie Hindernispositionen.
+\end{itemize}
+\item die Kontrollschicht überwacht die Arbeit der einzelnen
+  Komponenten, regelt den zeitlichen Ablauf des Programms und
+  interagiert mit dem Benutzer, d.h. ermöglicht Starten/Stoppen des
+  Roboters direkt an der Konsole oder per Kommunikation mit einem
+  Zentralrechner. Unterverzeichnisse \texttt{src/UserInterface} sowie
+  \texttt{src/Communication}.
+\end{enumerate}
+
+\begin{sidewaysfigure}
+\begin{center}
+\includegraphics[width=0.8\textwidth]{komponenten}
+\caption{Aufteilung der Gesamtaufgabe in vier Schichten mit verschiedenen Komponenten.
+Die Komponenten einer höheren Schicht können auf die Funktionalität der darunterliegenden
+Schichten zugreifen, nicht jedoch auf die höherer Schichten.}
+\label{fig:schichtung}
+\end{center}
+\end{sidewaysfigure}
+
+Die einzelnen Komponenten der dritten Schicht sind mit Schnittstellen
+ausgestattet, die es erlauben, verschiedene Realisierungen einer
+Komponente zu verwenden, z.B. verschiedene Spielertypen (Torwart,
+Angreifer, Verteidiger, Joysticksteuerung, usw.), Wechsel zwischen
+echtem Roboter und Simulator usw. Roboterkomponente, Bildverarbeitung
+und Spielerkomponente kennen das Weltmodell und dürfen darauf
+zugreifen\footnote{Zugriff erfolgt mit Hilfe der statischen Methode
+  \texttt{get\_main\_world\_model()} in der Klasse
+  \texttt{WorldModel}}, um Informationen an das Weltmodell zu übergeben
+oder Informationen aus dem Weltmodell zu entnehmen.
+
+Der typische Ablauf einer Iteration der Regelschleife sieht
+folgendermaßen aus:
+\begin{itemize}
+\item Die Bildverarbeitungskomponente wird angestoßen, holt ein Bild
+  von der Kamera, wertet das Bild aus und übergibt die Liste der
+  erkannte Objekte an das Weltmodell
+\item Das Weltmodell wird angestoßen, die aufgelaufenen Information
+  aus der Bildverarbeitung sowie die Odometrie- und
+  Fahrtvektorinformation, die in vorangegangenen Iterationen
+  eingegangen sind, miteinander zu verrechnen um somit eine neue
+  Schätzung der Roboter-, Ball- und Hindernisposition zu berechnen
+\item Die Spielerkomponente wird angestoßen, eine Verhalten in Form
+  eines Fahrtvektors zu berechnen. Dazu fragt die Spielerkomponente
+  die relevanten Informationen wie Roboter- und Ballposition beim
+  Weltmodell ab. Der resultierende Fahrtvektor wird an die
+  Regelschleife zurückgeliefert.
+\item Die Roboterkomponente übernimmt den Fahrtvektor von der
+  Regelschleife, rechnet in Radgeschwindigkeiten oder Motorspannungen
+  um und kommuniziert diese Informationen an den
+  Motorkontroller. Im Gegenzug übernimmt er vom Motorkontroller die
+  Odometrieinformation und gibt sie an das Weltmodell
+  weiter. Zusätzlich teilt die Roboterkomponente dem Weltmodell den
+  gerade gesetzten Fahrtvektor mit.
+\item Nach Abwarten der verbleibenden Zykluszeit beginnt die nächste
+  Iteration mit der Bildverarbeitung
+\end{itemize}
+
+Alle Informationen über die aktuelle Spielsituation, d.h. Sensorwerte
+wie im Bild erkannte Objekte, Fahrtvektoren und Odometrie als auch
+geschätzte Roboter-, Ball und Hindernispositionen werden grundsätzlich
+mit Zeitstempeln versehen, um den zeitlichen Ablauf rekonstruieren zu
+können. Der typische zeitliche Ablauf der Informationsverarbeitung ist 
+in Abb. \ref{fig:zeitablauf} dargestellt.
+
+\begin{figure}
+\includegraphics[width=\textwidth]{zeitablauf}
+\caption{Typischer zeitlicher Ablauf der Informationsverarbeitung in \textit{robotcontrol}.
+Falls die vorgegebene Zykluszeit kleiner als die tatsächliche benötigte Rechendauer ist,
+verlängert sich die Zykluszeit entsprechend. Die Wartezeiten vor und nach der 
+Roboteransteuerung entfallen dann.}
+\label{fig:zeitablauf}
+\end{figure}
+
+
+\subsection{Informationsaustausch und Konventionen}
+\label{subsec:informationsaustausch}
+
+Der Informationsaustausch zwischen den Komponenten erfolgt stets mit
+einem Zeitstempel versehen. Die geometrische Informationen werden
+dabei stets entweder im Roboterkoordinatensystem oder im
+Weltkoordinatensystem übergeben. Diese sind wie folgt definiert:
+\begin{itemize}
+\item stellt man sich hinter den Roboter mit Orientierung in die
+  Vorzugsrichtung des Roboters (die Seite an der der Kicker montiert
+  ist), so weist die x-Achse des Roboterkoordinatensystem nach rechts
+  und die y-Achse nach vorne. Winkel werden ab der x-Achse im
+  Gegenuhrzeigersinn gemessen. Der Ursprung des
+  Roboterkoordinatensystems befindet sich im Mittelpunkt des Roboters.
+\item der Ursprung des Weltkoordinatensystems befindet sich in
+  Spielfeldmitte. Die y-Achse weist in Richtung des gegnerischen Tors,
+  die x-Achse zur in diesem Sinne rechten Seitenlinie. Winkel werden
+  wiederum im Gegenuhrzeigersinn ab der x-Achse gemessen
+\end{itemize}
+Alle Entfernungsangaben erfolgen in Millimetern, Winkel in rad
+zwischen $0$ und $2\pi$, Geschwindigkeiten in $\frac{m}{s}$,
+Winkelgeschwindigkeiten in $\frac{rad}{s}$, Beschleunigungen in
+$\frac{m}{s^2}$, Rotationsbeschleunigungen in $\frac{rad}{s^2}$.
+
+Eine Ausrichtung des Roboters von $0$ bedeutet, dass die Roboter- und
+Weltkoordinatensystem nicht gegeneinander verdreht sind. Die Umrechung
+zwischen Welt- und Roboterkoordinaten erfolgt sie folgt: Sei
+$\vec{r}$ die Roboterposition und $\alpha$ die Orientierung des
+Roboters, dann entspricht einer Positition $\vec{x}_R$ in
+Roboterkoordinaten die Position $\vec{x}_W$ in Weltkoordinaten:
+\[ \vec{x}_W = \vec{r} + \mathit{rotate}_\alpha (\vec{x}_R) 
+\quad \mbox{ bzw. } \quad \vec{x}_R = \mathit{rotate}_{-\alpha} (\vec{x}_W-\vec{r}) \]
+wobei $\mathit{rotate}_\alpha$ die Rotation eines Vectors um den
+Winkel $\alpha$ bezeichnet, d.h. die Multiplikation mit der Drehmatrix
+$\left( \begin{array}{cc} \cos\alpha & -\sin\alpha \\ \sin\alpha &
+  \cos\alpha \end{array} \right)$.
+
+Neben den genannten Koordinatensystemen werden in der Software zwei
+weitere Koordinatensysteme verwendet, nämlich:
+\begin{itemize}
+\item Bildkoordinaten bzgl. des Kamerabildes
+\item Feldkoordinaten. Diese entsprechen den Weltkoordinaten beim
+  Spiel vom gelben auf das blaue Tor
+\end{itemize}
+Beide Koordinatensysteme werden jedoch lediglich innerhalb je einer
+Komponente verwendet (Bildverarbeitung bzw. Weltmodell), treten also
+beim Datenaustausch zwischen verschiedenen Komponenten nicht auf.
+
+Der Datenaustausch zwischen den Komponenten der Software ist in Abblidung
+\ref{fig:datenfluss} dargestellt. Dem Datenaustausch dienen folgende
+Datenstrukturen:
+\begin{description}
+\item[\texttt{VisibleObject}] dient der Beschreibung im Kamerabild
+  erkannter Objekte. Jedes Object wird durch einen Objekttyp
+  (z.B. Ball, gelbes Tor, Hindernis, weiße Linie, usw.) und eine
+  Position in Roboterkoordinaten gekennzeichnet. Zusätzlich existiert
+  ein Eintrag für die Objektbreite, die z.Z. jedoch nur bei
+  Hindernissen ausgefüllt wird.
+\item[\texttt{DriveVector}] dient der Beschreibung von Fahrtbefehlen
+  als auch von Odometriewerten. Es existieren Einträge für die
+  translatorische und rotatorische Robotergeschwindigkeit sowie für
+  die Auslösung des Kickers. Alle Angaben erfolgen in
+  Roboterkoordinaten. Unter \textit{Fahrtvektor} werden die
+  gesetzten oder beabsichtigten Robotergeschwindigkeiten verstanden,
+  unter Odometrie die tatsächlich mit den Radencodern gemessenen
+  Geschwindigkeiten.
+\item[\texttt{RobotLocation}] dient der Übermittlung der geschätzten
+  Roboterposition und -geschwindigkeit in Weltkoordinaten. Ein
+  zusätzlicher Qualitätswert zwischen 0 (schlecht) und 1 (gut) gibt
+  die Verlässlichkeit der Angaben an.
+\item[\texttt{BallLocation}] dient der Übermittlung der geschätzten
+  Ballposition und -geschwindigkeit in Weltkoordinaten. Zu beachten
+  ist, dass stets eine Positionsangabe erfolgt, auch wenn die Position
+  gar nicht bekannt ist oder gar kein Ball im Spiel ist. In einem
+  derartigen Fall ist der Qualitätswert klein und das Attribut 
+  \texttt{pos\_known} auf \textit{unknown} gesetzt. Der Attributwert
+  \texttt{pos\_known=}\textit{raised} bedeutet, dass angenommen werden
+  kann, dass der Ball vom Schiedsrichter hochgehoben wurde und daher
+  nicht mehr gesehen werden kann.
+\item[\texttt{ObstacleLocation}] enthält die Positionen und Breiten
+  der Hindernisse. Als Referenzpunkt für die Hindernisse dient das dem
+  Roboter am nächsten ligende Teil des Hindernisses. Die Breite wird
+  orthogonal zur Verbindungslinie Roboter-Hindernis gemessen.
+\item[\texttt{FieldGeometry}] enthält geometrische Informationen über
+  das Spielfeld. Längen werden stets in Längsrichtung, Breiten in
+  Querrichtung des Feldes gemessen.
+\item[\texttt{RobotProperties}] enthält geometrische und
+  fahrdynamische Kenngrößen des Roboters, letztere in pauschalierter
+  Form. Diese Angaben können in der Spielerkomponente verwendet
+  werden, um Bewegungs- und Trajektorienplanung durchzuführen.
+\item[\texttt{RobotData}] Roboterinterne Informationen für
+  Sepzialanwendungen. Auf die Verwendung dieser Information sollte
+  beim Wettkampfcode verzichtet werden.
+\item[\texttt{GameState}] beschreibt die Spielsituation, in der
+  sich der Spielablauf gerade befindet, also ob das Spiel unterbrochen
+  ist oder nicht, ob eine spezielle Situation wie Freistoß, Freistoß,
+  Einwurf o.ä. vorliegt. Nähere Informationen über die möglichen
+  GameStates sind in der Weltmodelldoku nachzulesen.
+\end{description}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=8cm]{datenfluss}
+\caption{Datenfluss zwischen den Komponenten der Software.}
+\label{fig:datenfluss}
+\end{center}
+\end{figure}
+
+
+\subsection{Protokollfunktion und Debuginformationen}
+\label{subsec:logfiles}
+
+Der Verarbeitung von Fehler- und Debuginformationen dienen zwei
+Mechanismen:
+\begin{itemize}
+\item Die Klasse \texttt{Journal} mit den drei Deklarativen
+  \texttt{JERROR}, \texttt{JWARNING} und \texttt{JMESSAGE} erlaubt die
+  Protokollierung von Fehlermeldungen, Warnungen usw. Die gesammelten
+  Meldungen werden am Ende des Programmablaufs in eine Protokolldatei
+  geschrieben.
+\item Mit Hilfe eines speziellen Weltmodells ist es Möglich, die an
+  den Schnittstellen zwischen den Komponenten anfallenden
+  Informationen in Logdateien abzuspeichern. Anschließend ist es
+  möglich, die Fahrt mit dem Tool \textit{tribotsview} zu
+  visualisieren oder die abgespeicherte Information wieder in das
+  Programm einzuspeisen, um den Lauf "`virtuell"' zu wiederholen. Mit
+  Hilfe dieses Mechanismus' ist es auch möglich, textuelle
+  Debuginformation abzuspeichern. Dazu steht der Ausgabestream
+  \texttt{WorldModel::get\_main\_world\_model().log\_stream()} 
+  (kurz: \texttt{LOUT})zur Verfügung. 
+
+  Der LOUT-Mechanismus erlaubt auch die Ausgabe von grafischen 
+  Befehlen zur Darstellung von Linien im Tribotsview. Jede Zeile,
+  die mit dem Zeichen "`\%"' beginnt, wird nicht als Text interpretiert,
+  sondern als Folge von Grafikbefehlen. Jeder Befehl besteht aus einem
+  Befehlswort und einer nachfolgenden Argumentliste, jeweils durch
+  Leerzeichen getrennt. Folgende Befehle stehen zur Verfügung:
+
+\begin{tabularx}{0.9\textwidth}{>{\tt}lX}
+line x1 y1 x2 y2 [x3 y3 ...] & Polylinie mit Eckpunkten \\
+circle x y r & Kreis mit Mittelpunkt und Radius \\
+arc x y r s e & Bogen mit Mittelpunkt, Radius, Anfangs- und Endwinkel in Grad \\
+cross x1 y1 [x2 y2 ...] & Andreaskreuz an Argumentkoordinaten \\
+arrow x1 y1 x2 y2 & Pfeil mit Anfangs- und Endpunkt \\
+word string & Text (genau ein Wort) \\
+color r g b & Farbwahl in RGB.Koordinaten \\
+thin & dünne Linien \\
+thick & dicke Linien \\
+solid & durchgezogene Linien \\
+dashed & gestrichelte Linien \\
+dotted & gepunktete Linien \\
+\end{tabularx}
+
+Zudem sind einige Farben vordefiniert: \texttt{white}, \texttt{grey},
+\texttt{black}, \texttt{yellow}, \texttt{orange}, \texttt{dark\_red},
+\texttt{red}, \texttt{light\_red}, \texttt{violet}, \texttt{dark\_blue},
+\texttt{blue}, \texttt{light\_blue}, \texttt{turquoise}, 
+\texttt{dark\_green}, \texttt{green}, \texttt{light\_green}, 
+\texttt{brown}. Eine Beispielzeile, die einen roten, gestrichelten
+Pfeil und ein blaues Kreuz zeichnet, sieht folgendermaßen aus:\\[1ex]
+\texttt{\% red dashed arrow 300 100 700 200 blue solid cross -500 -1000}
+\end{itemize}
+
+
+\subsection{Weitere Aspekte}
+\label{subsec:robotcontrol_sonstiges}
+
+\paragraph{Namespaces}
+Zur Vermeidung von Namenskonflikten bei dem Hinzufügen von fremder
+Software sind alle Klassen und Funktionen im Namespace
+\texttt{Tribots} deklariert. Lokale Hilfsfunktionen innerhalb von
+"`.cc-Dateien"' sollten mit unbenannten Namespaces versehen werden,
+ebenfalls zur Vermeidung von Namenskonflikten. Tools wie Tribotsview
+verwenden den Namensbereich \texttt{TribotsTools}.
+
+\paragraph{Kommentierung}
+Aufgrund des Umfangs der Software ist Kommentierung
+unabdingbar. Kommentiert werden sollten \underline{alle} Modul- und
+Komponentenschnittstellen, d.h. alle Header-Dateien. Zu jeder Klasse
+sollte die Grundfunktionalität beschrieben werden, zu jeder Funktion
+und Methode die realisierte Funktion, Argumente, Rückgabewerte und
+Seiteneffekte. Um eine automatische Referenz des Codes erzeugen zu
+können, sollten Kommentierungen im \textit{doxygen}-Stil erfolgen.
+
+\paragraph{Ausnahmen}
+Zur Ausnahmebehandlung können Exceptions verwendet werden. Es gibt
+eine Klasse \texttt{TribotsException}, von der alle anderen Exceptions
+mittelbar oder unmittelbar abgeleitet werden sollten. Wer Exceptions
+wirft muss allerdings auch sicherstellen, dass sie irgendwo gefangen
+und in geeigneter Weise behandelt werden.
+
+\paragraph{Konfigurationsdateien}
+Zur Übergabe von Konfigurationsinformationen werden
+Konfigurationsdateien verwendet, die mit der Modul
+\texttt{ConfigReader} gelesen und ausgewertet werden. Nach Möglichkeit
+sollten keine anderen Methoden zum Verwalten von
+Konfigurationsinformationen verwendet werden.
+
+\paragraph{Sandwichschnittstellen}
+Die vier Hauptkomponenten der Software (Bildverarbeitung, Weltmodell,
+Spieler, Roboter) sind so entworfen, dass sie sich selbst
+verwalten. Daher wurden "`Sandwichschnittstellen"' verwendet, die aus
+zwei Klassen bestehen, der "`Schnittstelle nach außen"' (z.B. Klasse
+\texttt{Player}) sowie der "`Schnittstelle nach innen"' (z.B. Klasse
+\texttt{PlayerType}). Die Schnittstelle nach innen ist eine abstrakte
+Klasse, die die Funktionalität festlegt, die von einer Realisierung
+der jeweiligen Komponente erfüllt werden muss. Die Schnittstelle nach
+außen hingegen verwaltet die Komponente, wählt die richtige
+Realisierung aus und dient als Ansprechpartner nach außen, d.h. alle
+Anfragen an die jeweilige Komponente erfolgen über diese Schnittstelle
+nach außen.
+
+
+

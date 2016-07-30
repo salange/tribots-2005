@@ -1,0 +1,187 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>CoachWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>CoachWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>320</width>
+            <height>200</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>0</hsizetype>
+            <vsizetype>0</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>320</width>
+            <height>200</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>320</width>
+            <height>500</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>Trainer</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QGroupBox" row="0" column="1">
+            <property name="name">
+                <cstring>groupBox2</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>10</pointsize>
+                </font>
+            </property>
+            <property name="title">
+                <string>Strategie</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel" row="0" column="0">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Rollenzuweisung:</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox" row="1" column="0">
+                    <item>
+                        <property name="text">
+                            <string>---</string>
+                        </property>
+                    </item>
+                    <property name="name">
+                        <cstring>policy_combo</cstring>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+        <widget class="QTextEdit" row="2" column="0" rowspan="1" colspan="2">
+            <property name="name">
+                <cstring>message_edit</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>10</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string></string>
+            </property>
+            <property name="wordWrap">
+                <enum>WidgetWidth</enum>
+            </property>
+            <property name="readOnly">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QGroupBox" row="0" column="0">
+            <property name="name">
+                <cstring>groupBox1</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>10</pointsize>
+                </font>
+            </property>
+            <property name="title">
+                <string>Kommunikation</string>
+            </property>
+            <grid>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QCheckBox" row="0" column="0">
+                    <property name="name">
+                        <cstring>comm_ball_mode_check</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Ballposition</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="1" column="0">
+                    <property name="name">
+                        <cstring>owns_ball_mode_check</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Ballbesitz</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox" row="2" column="0">
+                    <property name="name">
+                        <cstring>broadcast_mode_check</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Broadcast</string>
+                    </property>
+                </widget>
+            </grid>
+        </widget>
+    </grid>
+</widget>
+<connections>
+    <connection>
+        <sender>owns_ball_mode_check</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>CoachWidget</receiver>
+        <slot>owns_ball_mode_toggled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>comm_ball_mode_check</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>CoachWidget</receiver>
+        <slot>comm_ball_mode_toggled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>broadcast_mode_check</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>CoachWidget</receiver>
+        <slot>broadcast_mode_toggled(bool)</slot>
+    </connection>
+    <connection>
+        <sender>policy_combo</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>CoachWidget</receiver>
+        <slot>policyChange(const QString&amp;)</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in declaration">Coach.h</include>
+    <include location="local" impldecl="in implementation">CoachWidget.ui.h</include>
+</includes>
+<variables>
+    <variable access="private">TribotsTools::Coach* coach;</variable>
+</variables>
+<slots>
+    <slot>update( TribotsTools::RemoteTeamState &amp; ts )</slot>
+    <slot access="protected">comm_ball_mode_toggled( bool b )</slot>
+    <slot access="protected">broadcast_mode_toggled( bool b )</slot>
+    <slot access="protected">owns_ball_mode_toggled( bool b )</slot>
+    <slot access="protected">policyChange( const QString &amp; qs )</slot>
+</slots>
+<functions>
+    <function access="protected">init()</function>
+    <function access="protected">destroy()</function>
+    <function>init( const Tribots::ConfigReader &amp; cfg )</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

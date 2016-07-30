@@ -1,0 +1,302 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>TeamControlWidget</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>TeamControlWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>320</width>
+            <height>206</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>0</hsizetype>
+            <vsizetype>0</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>313</width>
+            <height>206</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>320</width>
+            <height>190</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>Teamcontrol</string>
+    </property>
+    <grid>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <widget class="QGroupBox" row="0" column="0">
+            <property name="name">
+                <cstring>groupBox12</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>10</pointsize>
+                </font>
+            </property>
+            <property name="title">
+                <string>Refereebox</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>refbox_ip_edit</cstring>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>connect_refbox_check</cstring>
+                    </property>
+                    <property name="text">
+                        <string>verbinden</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+        <widget class="QGroupBox" row="1" column="0">
+            <property name="name">
+                <cstring>groupBox13</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>10</pointsize>
+                </font>
+            </property>
+            <property name="title">
+                <string>Kommunikation</string>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Rate:</string>
+                    </property>
+                </widget>
+                <widget class="QSpinBox">
+                    <property name="name">
+                        <cstring>comm_rate_spin</cstring>
+                    </property>
+                    <property name="maxValue">
+                        <number>2000</number>
+                    </property>
+                    <property name="minValue">
+                        <number>100</number>
+                    </property>
+                    <property name="lineStep">
+                        <number>25</number>
+                    </property>
+                    <property name="value">
+                        <number>150</number>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QGroupBox" row="0" column="1" rowspan="2" colspan="1">
+            <property name="name">
+                <cstring>groupBox1</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>10</pointsize>
+                </font>
+            </property>
+            <property name="title">
+                <string>Referenzroboter</string>
+            </property>
+            <vbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>reference_select</cstring>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>joystick_check</cstring>
+                    </property>
+                    <property name="font">
+                        <font>
+                        </font>
+                    </property>
+                    <property name="text">
+                        <string>Joystick-Steuerung</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>messageboard_check</cstring>
+                    </property>
+                    <property name="text">
+                        <string>MessageBoard</string>
+                    </property>
+                </widget>
+            </vbox>
+        </widget>
+    </grid>
+</widget>
+<menubar>
+    <property name="name">
+        <cstring>MenuBarEditor</cstring>
+    </property>
+    <item text="Fenster" name="Fenster">
+        <action name="fensterSpielfeldAction"/>
+        <action name="fensterRefereeStatesAction"/>
+        <action name="fensterTrainerAction"/>
+        <action name="fensterJoystickAction"/>
+        <action name="fensterRoboterdatenAction"/>
+    </item>
+    <item text="Roboter" name="Roboter">
+    </item>
+</menubar>
+<toolbars>
+</toolbars>
+<actions>
+    <action>
+        <property name="name">
+            <cstring>fensterSpielfeldAction</cstring>
+        </property>
+        <property name="text">
+            <string>Spielfeld</string>
+        </property>
+        <property name="menuText">
+            <string>Spielfeld</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fensterRefereeStatesAction</cstring>
+        </property>
+        <property name="text">
+            <string>RefereeStates</string>
+        </property>
+        <property name="menuText">
+            <string>RefereeStates</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fensterJoystickAction</cstring>
+        </property>
+        <property name="text">
+            <string>Joystick</string>
+        </property>
+        <property name="menuText">
+            <string>Joystick</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fensterRoboterdatenAction</cstring>
+        </property>
+        <property name="text">
+            <string>Roboterdaten</string>
+        </property>
+        <property name="menuText">
+            <string>Roboterdaten</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fensterTrainerAction</cstring>
+        </property>
+        <property name="text">
+            <string>Trainer</string>
+        </property>
+        <property name="menuText">
+            <string>Trainer</string>
+        </property>
+    </action>
+</actions>
+<connections>
+    <connection>
+        <sender>reference_select</sender>
+        <signal>activated(int)</signal>
+        <receiver>TeamControlWidget</receiver>
+        <slot>reference_robot_changed(int)</slot>
+    </connection>
+    <connection>
+        <sender>joystick_check</sender>
+        <signal>clicked()</signal>
+        <receiver>TeamControlWidget</receiver>
+        <slot>joycontrol()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>refbox_ip_edit</tabstop>
+    <tabstop>connect_refbox_check</tabstop>
+    <tabstop>reference_select</tabstop>
+    <tabstop>joystick_check</tabstop>
+    <tabstop>comm_rate_spin</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in declaration">RemoteRobotWidget.h</include>
+    <include location="local" impldecl="in declaration">RefboxWidget.h</include>
+    <include location="local" impldecl="in declaration">RefboxClient.h</include>
+    <include location="local" impldecl="in declaration">JoystickDialog.h</include>
+    <include location="local" impldecl="in declaration">realrobotdataview.h</include>
+    <include location="local" impldecl="in declaration">CoachWidget.h</include>
+    <include location="local" impldecl="in declaration">../tribotsview/FieldOfPlay.h</include>
+    <include location="local" impldecl="in declaration">../../WorldModel/RefereeStateMachine.h</include>
+    <include location="global" impldecl="in declaration">deque</include>
+    <include location="global" impldecl="in declaration">qtimer.h</include>
+    <include location="local" impldecl="in implementation">TeamControlWidget.ui.h</include>
+</includes>
+<variables>
+    <variable>std::deque&lt;RemoteRobotWidget*&gt; robots;</variable>
+    <variable>TribotsTools::FieldOfPlay* field_widget;</variable>
+    <variable>TribotsTools::RefboxClient* refbox_client;</variable>
+    <variable>RefboxWidget* refbox_widget;</variable>
+    <variable>Tribots::RefereeStateMachine* refstate_machine;</variable>
+    <variable>QTimer* cycle_timer;</variable>
+    <variable access="private">int refbox_port;</variable>
+    <variable access="private">TribotsTools::DirectionOfPlay dir_of_play;</variable>
+    <variable access="private">JoystickDialog* joystick_widget;</variable>
+    <variable access="private">RealRobotDataView* rrd_widget;</variable>
+    <variable access="private">unsigned int refrobot;</variable>
+    <variable access="private">Tribots::FieldGeometry fieldgeometry;</variable>
+    <variable>CoachWidget* coach_widget;</variable>
+    <variable access="private">unsigned int cyclerobot;</variable>
+</variables>
+<slots>
+    <slot access="protected">init()</slot>
+    <slot access="protected">destroy()</slot>
+    <slot>init( const Tribots::ConfigReader &amp; cfg )</slot>
+    <slot access="protected">cycle_task()</slot>
+    <slot access="protected">refboxSignal( Tribots::RefboxSignal sig )</slot>
+    <slot access="protected">connectRefboxClient()</slot>
+    <slot access="protected">disconnectRefboxClient()</slot>
+    <slot access="protected">ownHalfChanged( int n )</slot>
+    <slot access="protected">teamColorChanged( int n )</slot>
+    <slot access="protected">reference_robot_changed( int n )</slot>
+    <slot>slDisplacement()</slot>
+    <slot access="protected">joycontrol()</slot>
+    <slot access="protected">refboxConnectionChanged( bool b )</slot>
+    <slot access="protected">cycleRateChanged( int n )</slot>
+    <slot>robotDisplacement(Tribots::Vec p, Tribots::Angle h)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

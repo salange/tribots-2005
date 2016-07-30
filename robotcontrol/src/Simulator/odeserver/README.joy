@@ -1,0 +1,26 @@
+Tribots ODE Demo      2004  Stefan Welker
+
+qmake odeserver.pro
+make
+
+./joy -notex (non-GL cards)
+
+
+w  forward
+s  backward
+a  left
+d  right 
+k,l turn left,right
+n,N   switch robot next,previous
+
+t  switch camera
+f  reset  formation (both teams)
+
+
+With a joystick (/dev/input/js0)  the ball can also be kicked.
+
+
+
+Questions ?
+
+stefan.welker@gmx.de

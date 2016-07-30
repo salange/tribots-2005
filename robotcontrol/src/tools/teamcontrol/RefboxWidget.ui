@@ -1,0 +1,630 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>RefboxWidget</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>RefboxWidget</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>320</width>
+            <height>280</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>5</hsizetype>
+            <vsizetype>5</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>320</width>
+            <height>280</height>
+        </size>
+    </property>
+    <property name="maximumSize">
+        <size>
+            <width>320</width>
+            <height>280</height>
+        </size>
+    </property>
+    <property name="caption">
+        <string>RefereeBoxWidget</string>
+    </property>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>CurrentRefereeState</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>301</width>
+                <height>21</height>
+            </rect>
+        </property>
+        <property name="alignment">
+            <set>AlignLeft</set>
+        </property>
+        <property name="readOnly">
+            <bool>true</bool>
+        </property>
+    </widget>
+    <widget class="QGroupBox">
+        <property name="name">
+            <cstring>groupBox1</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>40</y>
+                <width>101</width>
+                <height>150</height>
+            </rect>
+        </property>
+        <property name="frameShape">
+            <enum>GroupBoxPanel</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Sunken</enum>
+        </property>
+        <property name="title">
+            <string>Tribots</string>
+        </property>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>ThrowInOwnButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>40</y>
+                    <width>80</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Einwurf</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>FreeKickOwnButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>100</y>
+                    <width>80</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Freistoß</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>KickOffOwnButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>20</y>
+                    <width>80</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Anstoß</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>PenaltyOwnButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>120</y>
+                    <width>80</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Strafstoß</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>GoalKickOwnButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>60</y>
+                    <width>80</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Torabstoß</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>CornerKickOwnButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>80</y>
+                    <width>80</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Eckball</string>
+            </property>
+        </widget>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>StopButton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>120</x>
+                <y>60</y>
+                <width>80</width>
+                <height>41</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Stop</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>ReadyButton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>120</x>
+                <y>140</y>
+                <width>81</width>
+                <height>41</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Los!</string>
+        </property>
+    </widget>
+    <widget class="QGroupBox">
+        <property name="name">
+            <cstring>groupBox4</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>200</y>
+                <width>301</width>
+                <height>71</height>
+            </rect>
+        </property>
+        <property name="title">
+            <string></string>
+        </property>
+        <widget class="QLineEdit">
+            <property name="name">
+                <cstring>TribotsLabelColor</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>81</width>
+                    <height>21</height>
+                </rect>
+            </property>
+            <property name="alignment">
+                <set>AlignHCenter</set>
+            </property>
+            <property name="readOnly">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QLineEdit">
+            <property name="name">
+                <cstring>TribotsGoalColor</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>40</y>
+                    <width>81</width>
+                    <height>21</height>
+                </rect>
+            </property>
+            <property name="alignment">
+                <set>AlignHCenter</set>
+            </property>
+            <property name="readOnly">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>ChangeLabelColorButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>110</x>
+                    <y>10</y>
+                    <width>81</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Wechseln</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>ChangeGoalColorButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>110</x>
+                    <y>41</y>
+                    <width>81</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Wechseln</string>
+            </property>
+        </widget>
+        <widget class="QLineEdit">
+            <property name="name">
+                <cstring>OpponentGoalColor</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>210</x>
+                    <y>40</y>
+                    <width>81</width>
+                    <height>21</height>
+                </rect>
+            </property>
+            <property name="alignment">
+                <set>AlignHCenter</set>
+            </property>
+            <property name="readOnly">
+                <bool>true</bool>
+            </property>
+        </widget>
+        <widget class="QLineEdit">
+            <property name="name">
+                <cstring>OpponentLabelColor</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>210</x>
+                    <y>10</y>
+                    <width>81</width>
+                    <height>21</height>
+                </rect>
+            </property>
+            <property name="alignment">
+                <set>AlignHCenter</set>
+            </property>
+            <property name="readOnly">
+                <bool>true</bool>
+            </property>
+        </widget>
+    </widget>
+    <widget class="QGroupBox">
+        <property name="name">
+            <cstring>groupBox2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>210</x>
+                <y>40</y>
+                <width>100</width>
+                <height>150</height>
+            </rect>
+        </property>
+        <property name="title">
+            <string>Gegner</string>
+        </property>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>KickOffOpponentButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>20</y>
+                    <width>81</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Anstoß</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>ThrowInOpponentButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>40</y>
+                    <width>81</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Einwurf</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>GoalKickOpponentButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>60</y>
+                    <width>81</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Torabstoß</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>CornerKickOpponentButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>80</y>
+                    <width>81</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Eckball</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>FreeKickOpponentButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>100</y>
+                    <width>81</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Freistoß</string>
+            </property>
+        </widget>
+        <widget class="QPushButton">
+            <property name="name">
+                <cstring>PenaltyOpponentButton</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>120</y>
+                    <width>81</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="text">
+                <string>Strafstoß</string>
+            </property>
+        </widget>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>StartButton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>120</x>
+                <y>100</y>
+                <width>80</width>
+                <height>41</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Freies
+Spiel</string>
+        </property>
+    </widget>
+</widget>
+<connections>
+    <connection>
+        <sender>KickOffOpponentButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>kickOffOpponentPressed()</slot>
+    </connection>
+    <connection>
+        <sender>KickOffOwnButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>kickOffOwnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>CornerKickOpponentButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>cornerKickOpponentPressed()</slot>
+    </connection>
+    <connection>
+        <sender>CornerKickOwnButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>cornerKickOwnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>FreeKickOpponentButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>freeKickOpponentPressed()</slot>
+    </connection>
+    <connection>
+        <sender>FreeKickOwnButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>freeKickOwnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>GoalKickOpponentButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>goalKickOpponentPressed()</slot>
+    </connection>
+    <connection>
+        <sender>GoalKickOwnButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>goalKickOwnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>PenaltyOpponentButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>penaltyKickOpponentPressed()</slot>
+    </connection>
+    <connection>
+        <sender>PenaltyOwnButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>penaltyKickOwnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>ThrowInOpponentButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>throwInOpponentPressed()</slot>
+    </connection>
+    <connection>
+        <sender>ThrowInOwnButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>throwInOwnPressed()</slot>
+    </connection>
+    <connection>
+        <sender>StopButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>stopPressed()</slot>
+    </connection>
+    <connection>
+        <sender>StartButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>startPressed()</slot>
+    </connection>
+    <connection>
+        <sender>ReadyButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>readyPressed()</slot>
+    </connection>
+    <connection>
+        <sender>ChangeLabelColorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>changeLabelPressed()</slot>
+    </connection>
+    <connection>
+        <sender>ChangeGoalColorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>RefboxWidget</receiver>
+        <slot>changeOwnHalfPressed()</slot>
+    </connection>
+</connections>
+<tabstops>
+    <tabstop>CurrentRefereeState</tabstop>
+    <tabstop>KickOffOwnButton</tabstop>
+    <tabstop>ThrowInOwnButton</tabstop>
+    <tabstop>GoalKickOwnButton</tabstop>
+    <tabstop>CornerKickOwnButton</tabstop>
+    <tabstop>FreeKickOwnButton</tabstop>
+    <tabstop>PenaltyOwnButton</tabstop>
+    <tabstop>StopButton</tabstop>
+    <tabstop>StartButton</tabstop>
+    <tabstop>ReadyButton</tabstop>
+    <tabstop>KickOffOpponentButton</tabstop>
+    <tabstop>ThrowInOpponentButton</tabstop>
+    <tabstop>GoalKickOpponentButton</tabstop>
+    <tabstop>CornerKickOpponentButton</tabstop>
+    <tabstop>FreeKickOpponentButton</tabstop>
+    <tabstop>PenaltyOpponentButton</tabstop>
+    <tabstop>TribotsLabelColor</tabstop>
+    <tabstop>ChangeLabelColorButton</tabstop>
+    <tabstop>OpponentLabelColor</tabstop>
+    <tabstop>TribotsGoalColor</tabstop>
+    <tabstop>ChangeGoalColorButton</tabstop>
+    <tabstop>OpponentGoalColor</tabstop>
+</tabstops>
+<includes>
+    <include location="local" impldecl="in declaration">../../Structures/GameState.h</include>
+    <include location="local" impldecl="in declaration">../../WorldModel/RefereeStateMachine.h</include>
+    <include location="local" impldecl="in implementation">RefboxWidget.ui.h</include>
+</includes>
+<variables>
+    <variable access="private">Tribots::RefereeState refstate;</variable>
+    <variable access="private">int own_half;</variable>
+    <variable access="private">int team_color;</variable>
+</variables>
+<signals>
+    <signal>ownHalfSelect(int)</signal>
+    <signal>labelSelect(int)</signal>
+    <signal>refboxSignal(Tribots::RefboxSignal)</signal>
+</signals>
+<slots>
+    <slot>refstateChanged( Tribots::RefereeState rs )</slot>
+    <slot>labelChanged( int n )</slot>
+    <slot>ownHalfChanged( int n )</slot>
+    <slot access="protected">changeOwnHalfPressed()</slot>
+    <slot access="protected">changeLabelPressed()</slot>
+    <slot access="protected">stopPressed()</slot>
+    <slot access="protected">readyPressed()</slot>
+    <slot access="protected">startPressed()</slot>
+    <slot access="protected">kickOffOwnPressed()</slot>
+    <slot access="protected">throwInOwnPressed()</slot>
+    <slot access="protected">goalKickOwnPressed()</slot>
+    <slot access="protected">cornerKickOwnPressed()</slot>
+    <slot access="protected">freeKickOwnPressed()</slot>
+    <slot access="protected">penaltyKickOwnPressed()</slot>
+    <slot access="protected">kickOffOpponentPressed()</slot>
+    <slot access="protected">throwInOpponentPressed()</slot>
+    <slot access="protected">goalKickOpponentPressed()</slot>
+    <slot access="protected">cornerKickOpponentPressed()</slot>
+    <slot access="protected">freeKickOpponentPressed()</slot>
+    <slot access="protected">penaltyKickOpponentPressed()</slot>
+</slots>
+<functions>
+    <function>init()</function>
+</functions>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

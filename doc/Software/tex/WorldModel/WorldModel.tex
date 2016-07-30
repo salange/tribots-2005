@@ -1,0 +1,701 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{german}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{amsmath}
+
+\geometry{
+  body={17cm, 25cm},
+  top=2cm,
+  left=2cm
+}
+
+
+\title{Übersicht Weltmodelle}
+\author{Martin Lauer}
+
+\begin{document}
+\sloppypar{
+
+\maketitle
+
+\section{Klassenhierarchie}
+
+Es existieren z.Z. folgende Weltmodellklassen (vgl. Abb. \ref{fig:wm_hier}):
+\begin{itemize}
+\item Klasse \texttt{WorldModelType}, als abtrakte Schnittstelle;
+hier werden außerdem Feldgeometrie, Spielfeldhälfte, Robotereigenschaften und
+Spielstand (GameState) verwaltet
+\item Klasse \texttt{WorldModelTypeBase}, als abstrakte Klasse; implementiert 
+die reinen "`Verwaltungstätigkeiten"'', d.h. Anfrage nach Feldseite, Feldgeometrie, 
+GameState, usw.
+\item Klasse \texttt{WorldModelDummy}, als Dummy-Version;
+es existiert die Möglichkeit, durch Einträge in der Konfigurationsdatei diese
+Klasse zu veranlassen, bestimmte Ball- und Roboterpositionen und -Geschwindigkeiten
+zu liefern
+\item Klasse \texttt{SimulatorWorldModel}, als Simulatoranbindung;
+liest Roboter- und Ballposition aus dem Simulator; verwendet Fahrtvektoren statt
+Odometriewerten
+\item Klasse \texttt{CondensationWorldModel}, Weltmodell auf der Basis eines
+Condensation- (Partikel-) Filters unter Berücksichtigung von Liniensegmenten und
+Toren
+\item Klasse \texttt{AddWriteWorldModel}: eine Klasse, die man dem eigentlichen 
+Weltmodell voranstellen kann, um die eingehenden Informationen sowie die geschätzten
+Ball- und Roboterposition in Dateien ausgeben zu lassen.
+\item Klasse \texttt{FileWorldModel}, Weltmodell, das Roboter- und Ballposition aus
+einer Datei ausliest; Gegenstück zu \texttt{AddWriteWorldModel}
+\item Klasse \texttt{ErrorMinimiserWorldModel} verwendet die Selbstlokalisation auf Basis
+von Fehlerminimierung und einen verbesserten Ballfilter.
+\end{itemize}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=\textwidth]{hierarchy}
+\caption{Weltmodell Klassen-Hierarchie}
+\label{fig:wm_hier}
+\end{center}
+\end{figure}
+
+
+\section{GameState-Verwaltung}
+
+Die GameStates werden in der Klasse \texttt{GameStateManager} verwaltet, die von der Klasse
+\texttt{WorldModelTypeBase} eingebunden wird. Ein GameState enthält ein Attribut \texttt{in\_game},
+das festlegt, ob der Roboter am Spiel teilnehmen soll oder nicht. In letzterem Fall berechnet der
+Spielertyp zwar einen Fahrbefehl, dieser wird jedoch in der Kontrollschleife zu Null abgeändert,
+so dass sich der Roboter nicht bewegt.
+
+Wesentlicher Bestandteil des GameStates ist der RefereeState, der angibt, in welcher Phase des
+Spiels man sich gerade befindet. In jeder Phase des Spiels gelten andere Regeln. Die Übergänge
+zwischen den verschiedenen RefereeStates erfolgt durch Interaktion mit Signalen der Refereebox.
+Die Übergänge, die nach Ballbewegung oder nach 10s Zeitspanne werden vom GameStateManager
+selbständig umgestellt. Abbildung \ref{fig:refstates} stellt ein Übergangsdiagramm der RefereeStates 
+während eines Spieles dar.
+
+\begin{sidewaysfigure}
+\includegraphics[width=\textwidth]{referee_states}
+\caption{Übersicht über die RefereeStates und deren Übergänge. Fettgedruckte Wörter bezeichnen 
+RefereeStates, kursiv gedruckte Signale der Refereebox. Alle in einem Spiel auftretenden Übergänge
+sind in dem Diagramm angegeben.}
+\label{fig:refstates}
+\end{sidewaysfigure}
+
+Die Refereestates besitzen folgende Bedeutung:
+\begin{description}
+\item[stopRobot] Unterbrechung des Spiels, Roboter darf sich nicht bewegen
+\item[freePlay] Uneingeschränktes Spiel, Roboter darf sich frei auf dem Feld bewegen
+\item[ErrorState] Künstlicher Fehlerzustand, tritt im Spiel nie auf
+\item[preOwnKickOff] Aufstellung nehmen für eigenen Anstoß, Roboter bleiben in eigener Hälfte
+\item[preOpponentKickOff] Aufstellung nehmen für eigenen Anstoß, Roboter bleiben in eigener Hälfte 
+außerhalb des Mittelkreises
+\item[postOpponentKickOff] Ball freigegeben, aber Gegner hat den Ball noch nicht berührt, Roboter 
+bleiben in eigener Hälfte außerhalb des Mittelkreises
+\item[preOwnGoalKick] Aufstellung nehmen für eigenen Torabschlag
+\item[preOpponentGoalKick] Aufstellung nehmen für Torabschlag des Gegners, Roboter müssen 
+außerhalb des gegnerischen Strafraums bleiben
+\item[postOpponentGoalKick] Ball freigegeben, aber Gegener hat den Ball noch nicht berührt, Roboter 
+müssen außerhalb des gegnerischen Strafraums bleiben
+\item[preOwnCornerKick] Aufstellung nehmen für Eckball des eigenen Teams
+\item[preOpponentCornerKick] Aufstellung nehmen für Eckball des gegnerischen Teams, Roboter 
+müssen 2m Abstand zum Ball halten 
+\item[postOpponentCornerKick] Ball freigegeben, aber Gegner hat den Ball noch nicht berührt, Roboter 
+müssen 2m Abstand zum Ball halten 
+\item[preOwnThorwIn] Aufstellung nehmen für "`Einwurf"' des eigenen Teams
+\item[preOpponentThrowIn] Aufstellung nehmen für "`Einwurf"' des gegnerischen Teams, Roboter 
+müssen NN Abstand zum Ball halten
+\item[postOpponentThrowIn] Ball freigegeben, aber Gegner hat den Ball noch nicht berührt, Roboter 
+müssen NN Abstand zum Ball halten
+\item[preOwnFreeKick] Aufstellung nehmen für Freistoß des eigenen Teams
+\item[preOpponentFreeKick] Aufstellung nehmen für Freistoß des gegnerischen Teams, Roboter 
+müssen 2m Abstand zum Ball halten 
+\item[postOpponentFreeKick] Ball freigegeben, aber Gegner hat den Ball noch nicht berührt, Roboter 
+müssen 2m Abstand zum Ball halten 
+\item[preOwnPenalty] Aufstellung nehmen für Strafstoß des eigenen Teams, alle Roboter müssen in
+die eigene Hälfte
+\item[preOpponentPenalty] Aufstellung nehmen für Strafstoß des gegnerischen Teams, alle Roboter 
+außer dem Torwart müssen in die gegnerische Hälfte, Towart muss in den eigenen Torraum
+\item[postOpponentPenalty] Ball freigegeben, aber Ball vom Gegner noch nicht berührt, Torwart muss
+im Torraum bleiben
+\item[ownPenalty] Strafstoß des eigenen Teams wird durchgeführt
+\item[opponentPenalty] Strafstoß des gegnerischen Teams wird durchgeführt
+\end{description}
+
+
+\section{SimulatorWorldModel}
+
+kommuniziert mit dem Simulator und liest die dort vorhandenen Informationen aus:
+\begin{itemize}
+\item Roboterposition und -ausrichtung
+\item Ballposition
+\item Hindernispositionen (andere Roboter, intern missverständlich als "`Fieldlines"' behandelt)
+\end{itemize}
+Die Roboter- und Ballgeschwindigkeit wird nicht aus dem Simulator gewonnen, sondern berechnet:
+für die Ballgeschwindigkeit wird der Ballfilter auf Basis der Selbstlokalisation genutzt und
+statt der Odometrie wird der zuletzt gesetzte Fahrtvektor verwendet. Die Breite der Hindernisse
+wird pauschal mit 600mm angesetzt.
+
+
+\section{AddWriteWorldModel}
+
+ergänzend zu einem der anderen Weltmodelle schreibt folgende Informationen in Dateien:
+\begin{itemize}
+\item die eingehenden Fahrtvektoren in der Datei \textit{wminfo.drv}
+\item die eingehenden Odometrievektoren in der Datei \textit{wminfo.odo}
+\item die eingehenden Informationen aus der Bildverarbeitung in der Datei \textit{wminfo.vis}
+\item die geschätzen Roboterpositionen und -geschwindigkeiten in der Datei \textit{wminfo.rpos}
+\item die geschätzen Ballpositionen und -geschwindigkeiten in der Datei \textit{wminfo.bpos}
+\item die Hindernispositionen und -breiten in der Datei \textit{wminfo.opos}
+\end{itemize}
+Das \texttt{AddWriteWorldModel} wird mit dem Schalter \texttt{add\_write\_world\_model=true} in
+den Konfigurationsdateien eingeschaltet, der Dateiname der Zieldateien kann mit 
+\texttt{write\_world\_model\_info=FILENAME} verändert werden.
+
+
+\section{FileWorldModel}
+
+ermöglicht das Einlesen von Roboter- und Ballpositionen aus Dateien. Die Dateien werden mit den
+Konfigurationseinträgen \texttt{robot\_pos\_file} und \texttt{ball\_pos\_file} bestimmt. Das Format
+der Dateien entspricht dem Format der von \texttt{AddWriteWorldModel} geschriebenen Dateien.
+Ball und Roboterpositionen werden unter Annahme konstanter Geschwindigkeiten prädiziert.
+
+
+\section{Condensation- und ErrorMinimiser-Weltmodelle}
+
+Für die im realen Spiel einsetzbaren Weltmodelle wurde versucht, eine weitreichende Modularisierung
+umzusetzen. Die Aufgaben eines Weltmodells können durch drei Bereiche beschrieben werden:
+\begin{itemize}
+\item Bestimmung der Roboterposition (Selbstlokalisierung)
+\item Bestimmung von Ballposition und -geschwindigkeit (Ballfilter)
+\item Verwaltung der Hindernisse (Hindernisfilter)
+\end{itemize}
+Für jede dieser drei Aufgabenbereiche stehen verschiedene Realisierungen zur Verfügung,
+die im Prinzip in beliebiger Weise kombiniert werden können und die nachfolgend im Einzelnen 
+dargestellt werden sollen. Neben diesen Hauptaufgaben werden noch Hilfsmodule benötigt zur
+Verwaltung der eingehenden Sensorinformationen sowie zur Prädiktion der Roboterposition.
+
+Die beiden Weltmodelle kombinieren folgende Module:
+\begin{center}
+\begin{tabular}{l|l|l}
+\hline
+Komponente & CondensationWorldModel & ErrorMinimiserWorldModel \\
+\hline \hline
+Selbstlokalisierung & CondensationFilter & ErrorMinimiserSL \\
+Ballfilter & DynamicSlidingWindowBallFilter & TwinBallFilter \\
+Hindernisfilter & EMAObstacleFilter & EMAObstacleFilter \\
+Odometrieverwaltung & OdometryContainer & OdometryContainer \\
+Bildinformationsverwaltung & VisualContainer & VisualContainer \\
+Prädiktion der Roboterposition & RobotPositionPredictor & (ErrorMinimiserSL) \\
+Robotergeschw. schätzen & SLVelocitySensor & SLVelocitySensor \\
+Blockadeerkennung & SLStuckSensor & SLStuckSensor \\
+\hline
+\end{tabular}
+\end{center}
+
+
+\subsection{Selbstlokalisierung mit CondensationFilter}
+
+Der CondensationFilter ist im Wesentlichen eine Realisierung eines 
+Sequential-Importance-Sampling-\&-Resampling-Ansatzes mit Resampling in jeder Iteration. Der Ablauf einer
+Iteration ist in der Methode \texttt{CondensationFilter::update} festgelegt:
+\begin{enumerate}
+\item Partikel verschieben und verrauschen
+\item Im Bild erkannte Liniensegmente einarbeiten, d.h. Partikelwahrscheinlichkeiten anpassen
+\item Die mittlere Position und Ausrichtung berechnen, diese als aktuelle Roboterposition zurückliefern
+\item Größe der Partikelmenge anpassen
+\item Ggf. Partikel ganz neu streuen
+\item Partikel resamplen
+\end{enumerate}
+
+\paragraph*{Besonderheiten}
+\begin{itemize}
+\item beim Verschieben und Verrauschen der Partikel werden die Standardabweichungen der Rauschverteilung, 
+getrennt nach Translation und Rotation übergeben
+\item beim Verschieben und Verrauschen der Partikel kann angegeben werden, dass eine bestimmte Anzahl 
+gleichverteilt über das Feld erzeugt werden; die Ausrichtung orientiert sich an der aktuellen Positionsschätzung,
+um Orientierungen auf das falsche Tor möglichst zu vermeiden
+\item die Wahrscheinlichkeitsdichten für die Sensorintegration sind unecht, sie bestehen aus einem konstanten
+Grundanteil und einem dreicksförmigen Bereich um Null, dessen Breite variiert werden kann (siehe Abb. 
+\ref{fig:sensorwahrscheinlichkeit}). Dies dient dazu, dass fehlerhaft erkannte Liniensegmente zu tolerieren
+\item wenn Information über die Tore vorhanden ist, werden bei der Sensorintegration Partikel ggf. auf
+ihre Symmetrieposition umgesetzt
+\item bei der Berechnung des mittleren Partikels gehen evtl. zusätzlich gleichverteilte Partikel nicht ein.
+\item die Anzahl Partikel variiert in einem vorgegeben Intervall. Ob sie vergrößert oder verkleinert wird
+hängt von der Homogenität der vorhanden Partikelmenge ab. Die Homogenität wird gemessen in der Determinante
+der Kovarianzmatrix der Positionen sowie der Länge des durchschnittlichen Orientierungsvektors.
+\item wenn die Anzahl Partikel für viele Iterationen lang maximal ist, so wird angenommen, dass der Filter
+delokalisiert ist und es werden alle Partikel über das gesamte Feld gleichverteilt gestreut neu gesamplet.
+\end{itemize}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=7cm]{sensorwahrscheinlichkeit}
+\caption{Dichte der unechten Sensorwahrscheinlichkeitsverteilung; Die Parameter $c$ und $d$ können mit Hilfe
+des Konfigurations-Eintrags \texttt{CondensationFilter::sensor\_probabilities = d c} gesetzt werden.}
+\label{fig:sensorwahrscheinlichkeit}
+\end{center}
+\end{figure}
+
+\paragraph*{Konfigurationsparameter}
+\begin{itemize}
+\item \texttt{CondensationFilter::number\_particles = $n_1$ $n_2$ $n_3$ $n_4$} steuert die Anzahl Partikel.
+$n_1$ ist die Mindestzahl, $n_2$ die Maximalzahl, $n_3$ die Anzahl beim Start und $n_4$ die Anzahl Partikel,
+die in jeder Iteration gleichverteilt über das gesamte Feld gestreut werden soll.
+\item \texttt{CondensationFilter::auto\_reinit\_waiting\_time = $n$} gibt die Mindestzahl Iteration an,
+während denen maximale Partikelzahl vorhanden war, bevor die Partikel ganz neu gestreut werden
+\item \texttt{CondensationFilter::spread\_factors = $d_1$ $d_2$} gibt die Standardabweichung beim Verrauschen
+an, getrennt nach Position ($d_1$, in mm) und Orientierung ($d_2$, in Grad).
+\item \texttt{CondensationFilter::sensor\_probabilities = $d_1$ $d_2$} steuert die Wahrscheinlichkeitsverteilung
+bei der Sensorintegration, siehe Abbildung \ref{fig:sensorwahrscheinlichkeit}.
+\item \texttt{CondensationFilter::trimrate = $d$} schaltet einengetrimmten Schätzmodus ein, bei der nur 
+ein Anteil von $1-d$ der weißen Liniensegmente berücksichtigt wird
+\item \texttt{CondensationFilter::consider\_goals = $b$} schaltet die Berücksichtigung der Tore ein, um die Orientierung des
+Roboters (wo ist blaues Tor, wo gelbes) festzustellen.
+\end{itemize}
+
+
+\subsection{Selbstlokalisierung mit der ErrorMinimiserSL}
+
+Die ErrorMinimiserSL realisiert einen effizienten SL-Ansatz basierend auf dem Prinzip der Minimierung des
+Fehlers zwischen Positionsschätzung und Bildinformation sowie dem Kalman-Filter.
+
+\subsubsection{Grundprinzip Fehlerminimierung}
+
+Die Idee der Fehlerminimierung besteht darin, diejenige Position auf dem Spielfeld als die
+tatsächliche Roboterposition anzusehen, für die gesehenen Liniensegmente und die Liniensegmente
+laut Modell des Spielfeldes am besten zusammenpassen. Durch Summation des Fehlers über alle 
+gesehenen Liniensegmente entsteht eine Fehlerfunktion über dem Raum der möglichen 
+Roboterpositionen und -ausrichtungen $r = (r_x, r_y, r_\phi)$. Dabei ist folgendes zu beachten:
+\begin{itemize}
+\item die Genauigkeit der Sensorinformation nimmt mit steigendem Abstand vom Roboter ab. 
+Daher gehen die Liniensegmente gewichtet in die Summe ein. Die Gewichtungsfunktion wurde 
+nach Plausibilitäts-Gesichtspunkten gewählt, sie ist in \texttt{VisualPositionOptimiser::calculate\_distance\_weights}
+implementiert.
+\item es werden im Bild Liniensegmente erkannt, die keine sind. Diese Ausreißer können zu einer
+Fehlschätzung führen. Um ihren Einfluss zu beschränken wurde als Fehlerfunktion nicht der
+quadratische Fehler verwendet sondern die Fehlerfunktion $e \mapsto 1-\frac{c^2}{c^2+e^2}$ wobei
+$c$ eine Konstante ist (siehe Abb. \ref{fig:error}). Als Standardwert wurde $c=250$ gewaehlt. Diese 
+Konstante kann mit dem Konfigurationsparameter \texttt{ErrorMinimiserSL::error\_width} veraendert werden.
+\end{itemize}
+
+Die auf diese Weise gebildete Fehlerfunktion weist viele lokale Minima auf, so dass verschiedene
+Positionen in Frage kommen. Durch Anwendung eines Gradientenabstiegverfahren kann ein von einer
+Anfangs-Suchposition naheliegendes lokales Minimum gefunden werden. In der Klasse 
+\texttt{VisualPositionOptimiser} ist dazu das Rprop-Verfahren implementiert worden, das 10 Iterationen
+(bei wenig Bildinformation 20 Iteration) lang ausgeführt wird.
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=7cm]{error}
+\caption{Abklingende und quadratische Fehlerfunktion für $c=250$}
+\label{fig:error}
+\end{center}
+\end{figure}
+
+\subsubsection{Kalman-Filterung}
+
+Die durch die Fehlerminimierung gewonnen Positionsinformationen sind noch stark vom Rauschen
+der Bildverarbeitung abhängig. Wackeln des Kameraaufbaus bei schneller Fahrt führt unweigerlich
+zu großen Positionssprüngen bis zu einem Meter in zwei aufeinanderfolgenden Iterationen. Außerdem
+ist die Positionsbestimmung aufgrund weniger oder zu wenig Struktur aufweisender erkannter 
+Liniensegmente nicht immer oder nur unvollständig möglich. Daher wurde das Fehlerminimierungsprinzip
+um einen Kalman-Filter erweitert.
+
+Der Kalman-Filter wurde gegenüber der korrekten Modellierung etwas vereinfacht, da stets von einer
+Unabhängigkeit des Fehlers in den beiden Raumrichtungen $r_x$ und $r_y$ sowie der Orientierung
+$r_\phi$ ausgegangen wird. Diese Ungenauigkeit wurde in Kauf genommen, um die Berechnungen einfach 
+zu halten. Der Zustand des Kalman-Filters besteht daher nur aus $r=(r_x,r_y,r_\phi)$, die Geschwindigkeiten
+werden nicht mit geschätzt.
+
+In einem Aktualisierungsschritt des Filters wird zunächst anhand der Odometrie und Fahrtvektoren die 
+seit der letzten Aktualisierung zurückgelegten Strecke und Rotationswinkel berechnet. Die Varianz 
+dieser Bewegung wird in Abhängigkeit der Länge des zurückgelegten Weges nach Koordinatenachsen 
+getrennt berechnet. Sie ist so gewählt, dass sowohl ein leichtes Überfahren des Zielpunktes als auch
+ein Stehenbleiben am alten Punkt möglich sind, wenn auch nur mit kleiner Wahrscheinlichkeit.
+
+Ausgehend vom ideal berechneten Zielpunkt wird dann mit Hilfe des Fehlerminimierungsansatzes
+nach der optimalen Bild-Position gesucht. Für diese werden ebenfalls Varianzen berechnet, die die 
+Zuverlässigkeit der Bild-Position widerspiegeln. Dabei werden folgende Aspekte berücksichtigt:
+\begin{itemize}
+\item die Varianzen sind abhängig von der Anzahl beobachteter Liniensegmente. Je mehr Liniensegmente
+in die Berechnung eingehen, desto kleiner sind die Varianzen
+\item die Varianzen sind abhängig von der Bewegungsrichtung: quer zur Fahrtrichtung wird eine größere
+Varianz angenommen als parallel zur Fahrtrichtung zudem sind die Varianzen abhängig von der 
+Robotergeschwindigkeit
+\item die Varianzen werden nach Koordinatenrichtungen getrennt berechnet, um den Rechenaufwand
+zu verringern
+\item da die Struktur der erkannten Linien oft nicht vielseitig genug ist, um alle Koordinatenrichtungen
+zuverlässig zu schätzen (Aperturproblem) werden die Varianzen in den drei Raumrichtungen getrennt 
+berechnet. Dabei wird die Tatsache ausgenutzt, dass die meisten Spielfeldlinien längs oder quer zum
+Spielfeld verlaufen, wenige diagonal dazu. 
+
+Um die Zuverlässigkeit zu bestimmen, wird zunächst die
+zweite Ableitung der Fehlerfunktion approximiert. Dabei wird zur Vermeidung numerischer Instabilitäten
+statt der Fehlerfunktion $e \mapsto 1-\frac{c^2}{c^2+e^2}$ die quadratische Fehlerfunktion verwendet
+(die originale Fehlerfunktion ist nicht positiv definit),  wobei weit entfernt liegende Liniensegmente nicht 
+berücksichtigt werden. Unter Annahme einer Diagonalgestalt der Hessematrix werden aus 
+$\frac{\partial^2 Err}{(\partial r_x)^2}$, $\frac{\partial^2 Err}{(\partial r_y)^2}$ und 
+$\frac{\partial^2 Err}{(\partial r_\phi)^2}$ Varianzen gemäß einer heuristisch bestimmten Abhängigkeit
+berechnet. 
+
+Da die zweite Ableitung des Fehlers die Krümmung der Fehlerfunktion beschreibt ist die Zuverlässigkeit
+der Positionsschätzung groß, wenn die Krümmung groß ist, da in diesem Fall das Minimum deutlich
+ausgeprägt ist. Ist die Krümmung dagegen gering, so liegt ein sehr flaches Minimum vor, so dass
+von einer großen Varianz des Positionsfehlers ausgegangen werden muss.
+\end{itemize}
+
+Die Implementierung des Kalman-Filters wurde in der Klasse \texttt{RobotPositionKalmanFilter}
+realisiert, die der Varianzberechnung der Bild-Positionen in der Klasse \texttt{VisualPositionOptimiser}
+sowie der Methode \texttt{ErrorMinimiserSL::update\_alternative}.
+
+
+\subsubsection{Robustes Tracking durch interne Alternativen}
+
+Der bis hierhin geschilderte Ansatz ermöglicht bereits das Verfolgen der Roboterposition, wenn die
+Anfangsposition und -orientierung bekannt sind. Allerdings kann durch Aufsummieren von Positionsfehlern
+die Roboterposition im Laufe einer Fahrt verrutschen, vor allem wenn wenige Linien im Bild zu sehen sind.
+Kommen in einer solchen Situation wieder Linien ins Bild, kann es zu Fehlzuordnungen 
+kommen, z.B. wenn die Liniensegmente der Strafraumgrenze der Torraumgrenze zugeordnet werden. 
+
+Um solche kleinräumigen lokalen Minima überspringen zu können, wurde die Möglichkeit \textit{interner
+Alternativen} eingeführt. Dabei wird der Prozess des Findens der optimalen Bild-Position nicht
+nur einmal sondern fünfmal mit unterschiedlichen Anfangspositionen durchgeführt. Anschließend geht
+diejenige optimierte Bild-Position in den Kalman-Filter ein, die den geringsten Fehler aufweist. Um ein
+fehlerhaftes Abdriften der Roboterposition zu vermeiden, wird dabei der Bild-Position, die von der 
+Odometrieposition ausgehend optimiert wurde, Vorrang eingeräumt, sofern der Fehler dieser Position
+nicht wesentlich schlechter ist als der Fehler der besten Alternativposition. 
+
+Die Verwendung interner Alternativen kann mit Hilfe des Konfigurationsparameters 
+\texttt{ErrorMinimiserSL::use\_internal\_alternatives} an- bzw. ausgeschaltet werden.
+
+\subsubsection{Globale Lokalisierung mittels externer Alternativen}
+
+Der bisher vorgestellte Ansatz löst zwar das Problem der Weiterverfolgung der Roboterposition bei
+bekannter Startposition recht gut, es erlaubt jedoch nicht die Bestimmung des globalen Optimums
+der Roboterposition, z.B. beim Start des Verfahrens oder im Fall einer Delokalisierung. Um diese
+Aufgabe zu lösen, wurde das Verfahren um eine globale Lokalisationsmethode erweitert.
+
+Das Prinzip der globalen Lokalisierung beruht auf dem Durchsuchen des gesamten Parameterraums
+nach geeigneten Positionen. Wegen der Größe des Raums wird ein randomisiertes Verfahren verwendet,
+das in jeder Iteration Alternativepositionen auf ihre Eignung hin untersucht. Diese Alternativen werden
+fortan \textit{externe Alternativen} genannt werden, da sie unabhängig von der bisherigen 
+Positionsschätzung sind. Die Positionsschätzung im bisherigen Sinn wird fortan als \texttt{Haupthypothese}
+bezeichnet. Die Anzahl externer Alternativpositionen kann mit dem Konfigurationsparameter
+\texttt{ErrorMinimiserSL::number\_external\_alternatives} gewählt werden.
+
+Die Erzeugung neuer Alternativpositionen erfolgt durch gleichverteilte Zufallserzeugung über das gesamte
+Spielfeld und alle möglichen Orientierungen. Anschließend durchläuft jede Alternativhypothese die
+selben Schritte wie die Hyupthypothese: Optimierung durch Abgleich mit der Bildinformation und
+Kalman-Filterung. Aus Rechenzeitgründen werden für die externen Alternativen jedoch keine interenen
+Alternativpositionen verwendet. Anschließend werden die Fehler der Haupthypothese und der
+externen Alternativen miteinander verglichen. 
+
+Die Position mit dem kleinsten Fehler ist offensichtlich diejenige, die am besten passt. Allerdings sorgen 
+Zufälligkeiten, Rauschen und Fehldetektionen der Bildverarbeitung häufig dazu, dass eine externe 
+Alternative für eine Iteration besser erscheint als die Haupthypothese, obwohl sie tatsächlich gar nicht 
+besser ist. Daher werden zwei Techniken angewendet, um ein versehentliches Austauschen von 
+Haupthypothese und Alternativposition zu vermeiden:
+\begin{itemize}
+\item bei dem Vergleich der Fehler der Hypothesen wird der Fehler der Haupthypothese künstlich um 
+einen bestimmten Betrag verkleinert, um die Haupthypothese zu bevorzugen.
+\item ein einmalig geringerer Fehler einer Alternativhypothese führt noch nicht sofort zum Ersetzen 
+der Haupthypothese durch die Alternative. Erst wenn die externe Alternative mehrere Iterationen lang 
+besser als die Haupthypothese ist, findet ein Wechsel statt. 
+
+Hierzu wird ein Punktesystem verwendet:
+die jeweils beste Hypothese erhält in jeder Iteration einen Punkt. Diese Punkte werden mit Hilfe eines
+langfristigen exponentiell glättenden Durchschnitts verrechnet, um einen Qualitätswert für jede
+Hypothese zu bekommen: je größer der Qualitätswert, desto besser hat sich die Hypothese in der
+Vergangenheit bewährt. Ein Wechsel der Haupthypothese findet erst statt, wenn der Qualitätswert
+einer externen Alternative größer als der der Haupthypothese ist und außerdem einen bestimmten 
+Schwellwert überschreitet. Hiermit wird sichergestellt, dass ein Wechsel der Haupthypothese nur dann
+stattfindet, wenn die Alternativhypothese über viele Iterationen hinweg deutlich besser war als die 
+bisherige Haupthypothese.
+\end{itemize}
+
+Um die Rechenzeit effizient zu nutzen und nicht auf die Berechnung uninteressanter Alternativen zu
+verwenden, werden die Alternativen immer wieder durch neue, zufällig erzeugte Positionen ersetzt.
+Dabei spielt die Qualität einer Hypothese eine wichtige Rolle: je besser der Qualitätswert einer 
+Alternativposition ist, desto länger bleibt sie bestehen. Alternativen, die in den ersten Iterationen
+dagegen überhaupt keinen Punkt bekommen, werden nach wenigen Iterationen wieder aus der
+Hypothesenmenge entfernt.
+
+Eine externe Alternative entfällt auch dann, wenn sie einer anderen Alternativen oder der Haupthypothese
+zu ähnlich ist, d.h. Lage und Orientierung unterscheiden sich kaum. Dieser Fall tritt durch die schnelle
+Konvergenz in ein lokals Optimum (zumeist innerhalb von einer Iteration) häufig auf. Das Entfernen der
+Alternativposition dient wiederum der effizienten Ausnutzung der Rechenzeit.
+
+\subsubsection{Globale Orientierung}
+
+Die Symmetrie des Spielfeldes erzwingt einen zusätzlichen Mechanismus, um die globale Orientierung
+des Roboters zu bestimmen, d.h. die Frage zu klären ob sich der Roboter in der eigenen Spielfeldhälfte
+oder der Spielfeldhälfte des Gegeners befindet. Hierzu werden die von der Bildverarbeitung gelieferten
+Torpositionen ausgewertet. Es wird stets geprüft, ob sich an der im Bild erkannten Torposition überhaupt
+ein Tor befinden kann oder nicht. Wenn ja, wird die Torfarbe geprüft und gegebenenfalls die 
+Roboterposition auf die gegenüberliegende Position gespiegelt. Liegen widersprüchliche Torinformationen
+vor, wird die bisherige Orientierung beibehalten. Die gloable Orientierung kann mit Hilfe des
+Konfigurationsparameters \texttt{ErrorMinimiserSL::consider\_goals} ausgeschaltet werden.
+
+\subsubsection{Eigenschaften und bekannte Probleme der ErrorMinimiserSL}
+
+Die ErrorMinimiserSL hat sich in den bisherigen Tests als sehr zuverlässig und robust erweisen. Die mittlere Rechenzeit
+des Weltmodells bei Verwendung interner Alternativen und 5 externer Alternativen beträgt auf den Subnotebooks 
+ca. 6--10 ms. Die Zeit, die für die globale Lokalisation benötigt wird, liegt bei ca. 1--5 s. Auch bei blockiertem
+oder geschobenem Roboter erweist sich die Selbstlokalisation als funktionsfähig.
+
+Eine Reduzierung der Rechenzeit der Selbstlokalisation ist möglich durch:
+\begin{itemize}
+\item Verringerung der Anzahl Liniensegmente, die in jeder Iteration berücksichtigt werden. Tests mit maximal
+50 Liniensegmenten sind erfolgreich verlaufen. Vorteil dieser Vorgehensweise ist, dass durch Beschränkung
+der Anzahl Liniensegmente auch die maximal benötigte Rechenzeit kalkulierbar wird. Ohne Beschränkung
+werden bis zu 300 Liniensegmente ausgewertet. Der Rechenaufwand steigt linear mit dieser Zahl.
+\item Verringerung der externen Alternativen oder vollständiger Verzicht auf externe Alternativen verringert
+die Rechenzeit auf ca. 4--7 ms. Nachteil ist die längere Zeit bis zur globalen Lokalisierung bzw. die fehlende
+Möglichkeit der globalen Lokalisierung. Da durch fehlerhaft erkannte Liniensegmente sowie fehlerhafter
+Odometrieinformation (blockierter Roboter) eine Delokalisierung auftreten kann, ist der Roboter in der
+Folge nicht mehr von selbst manövrierfähig und die Position muss dem Roboter erst wieder manuell mitgeteilt 
+werden.
+\item Verzicht auf interne Alternativen verringert die Rechenzeit weiter auf ca. 3 ms. Problematisch ist 
+allerdings die stärkere Neigung zur Delokalisierung. Diese Option sollte daher nicht verwendet werden.
+\end{itemize}
+
+Schwierigkeiten mit der Selbstlokalisierung sind bisher in folgenden Situationen bekannt:
+\begin{itemize}
+\item Aperturproblem: treten über viele Iterationen hinweg wenige oder nur in einer Orientierung
+angeordnete Linien auf, z.B. bei der Fahrt vom Mittelkreis in Richtung Tor, so kann sich durch Fehler
+in der Odometrie sowie durch kleine Fehler bei der Roboterorientierung ein größerer Fehler bei
+der Lokalisierung ergeben, bis zu 50cm. Das selbe Phänomen tritt bei sehr schneller Fahrt und
+dadurch hervorgerufenem Wackeln des Kameraaufbaus auf. Die Folge sind Ausgleichsschritte der
+Selbstlokalisation, wenn das Aperturproblem nicht mehr fortbesteht. Diese Scheinbewegungen 
+haben auch Auswirkungen auf den Ball- und Hindernisfilter. Abhilfe kann nur durch Verbesserung
+der Harware geschaffen werden (bessere Sensorik, besserer Kameraaufbau, bessere Stoßdämpfung).
+\item fehlerhaft erkannte Liniensegmente: Zwar berücksichtigt die Form der Fehlerfunktion das
+Auftreten fehlerhafter Liniensegmente, allerdings können pathologische Fälle trotz allem zu einer
+Fehlschätzung bis hin zu einer Delokalisierung führen:
+\begin{itemize}
+\item als Linien erkannte Torpfosten, -latten und -seitenwände können zu einer Verdrehung
+der Position führen, wenn nicht gleichzeitig genug korrekte Liniensegmente erkannt werden
+\item weiße Objekte außerhalb des Feldes können ebenfalls eine Verdrehung der Selbstlokalisation
+herbeiführen. Wesentlich ist hier das Zahlenverhältnis von korrekten und fehlerhaften Liniensegmenten.
+\item weiße, linienförmige Objete außerhalb des Feldes können fehlerhaft als Linien interpretiert
+werden (Heizungsrohre!) und damit eine eigentlich falsche externe Alternativposition besser
+erscheinen lassen als die Haupthypothese
+\end{itemize}
+Abhilfe für diese Probleme ist schwierig. Im dritten Fall kann ein Ausschalten der externen 
+Alternativen helfen, allerdings unter Inkaufnahme fehlender globaler Lokalisierung. Verdecken 
+fehlerhafter weißer Linien kann kurzfristig helfen, ist jedoch keine Lösung für den Wettkampf. 
+Löschen aller außerhalb des Feldes erkannter Linien hilft nicht weiter, da zwangsläufig irreführende 
+lokale Minima der Fehlerfunktion entstehen und somit die Lokalisierung instabil wird. Wichtigster
+Ansatzpunkt zur Lösung dieser Probleme muss daher eine Verbesserung der Bildverarbeitung sein.
+\item fehlerhafte Tore: liefert die Bildverarbeitung fehlerhafte Torinformation, kann die 
+Selbstlokalisation getäuscht werden und zu einer Spiegelung aller Positionen führen. Dies tritt 
+insbesondere bei falsch eingestellten Farben auf. Abhilfe kann durch bessere Farbeinstellung 
+geschaffen werden, langfristig durch eine bessere Bildverarbeitung oder einen unabhängigen Richtungssensor
+(Magnetkompass/Gyroskop). Kurzfristig kann die Berücksichtigung von
+Torinformation ausgeschaltet werden, dann muss aber auch auf die Verwendung globaler Alternativen
+verzichtet werden und eine globale Lokalisierung ist nicht mehr möglich.
+\end{itemize}
+
+\subsubsection{Konfigurationsparameter}
+
+\begin{itemize}
+\item \texttt{ErrorMinimiserSL::consider\_goals  = true/false} schaltet die Abgleichung der globalen 
+Orientierung mit Hilfe der Tore ein/aus. Standardwert ist \texttt{true}.
+\item \texttt{ErrorMinimiserSL::use\_internal\_alternatives = true/false} schaltet die Verwendung interner
+Alternativen ein/aus. Standardwert ist \texttt{true}.
+\item \texttt{ErrorMinimiserSL::number\_external\_alternatives = $n$} gibt die Anzahl externer Alternativen
+an. Standardwert ist $1$; $0$ schaltet die Verwendung externer Alternativen ganz aus.
+\item \texttt{ErrorMinimiserSL::error\_width = $c$} bestimmt die Breite der Fehlerfunktion. $c$ sollte
+so gewählt werden, dass $2c$ der maximale Fehler in mm ist, der typischerweise auftritt. Größere
+Fehler werden somit weniger stark gewichtet. Standardwert ist $250$.
+\item \texttt{ErrorMinimiserSL::distance\_weight\_parameter = $d$} ist ein Parameter, um die Gewichtung
+der erkannten Liniensegmente in Abhängigkeit ihres Abstandes vom Roboter zu steuern. Je größer $d$,
+desto weniger unterscheiden sich die Gewichte in Abhängigkeit des Abstandes, für $d\rightarrow\infty$
+werden alle Liniensegmente gleichgewichtet. Ein plausibler Wert ist $d=1500$. Standardwert ist 
+$d\rightarrow\infty$.
+\item \texttt{ErrorMinimiserSL::max\_lines = $n$} gibt eine maximale Anzahl zu berücksichtigender
+Liniensegmente vor.
+\end{itemize}
+
+\subsubsection{Modulübersicht}
+
+\begin{itemize}
+\item \texttt{ErrorMinimiserSL} kombiniert die verschiedenen Bestandteile der Selbstlokalisation und
+verwaltet die Positionshypothesen. Stellt die Schnittstelle der Selbstlokalisation dar.
+\item \texttt{FieldLUT} tabelliert die minimalen Abstände der Feldpositionen zur nächsten weißen Linie
+sowie die partiellen Ableitungen dieser Funktion. Tabelle wird bei Programmstart neu erzeugt. \texttt{FieldLUT}
+wird auch vom Condensation-Filter genutzt.
+\item \texttt{RobotPositionKalmanFilter} implementiert den Kalman-Filter zur Integration von Odometrie-
+und Bildposition
+\item \texttt{VisualPositionOptimiser} stellt den Algorithmus zur Optimierung einer Position mit Hilfe
+der Bildinformation zur Verfügung sowie die Berechnung der zweiten Ableitungen des Fehlers
+\end{itemize}
+
+\subsection{Schätzen der Robotergeschwindigkeit}
+
+\subsubsection{Grundprinzip}
+
+Um eine zuverlässige Schätzung der aktuellen Geschwindigkeit des Roboters zu bekommen, wurde
+die Klasse \texttt{SLVelocitySensor} entwickelt, die aus den Selbstlokalisationspositionen die
+Robotergeschwindigkeit schätzt. Dabei wird zusätzlich auch die Position des Roboters geschätzt.
+
+Das Schätzverfahren basiert auf der Minimierung des quadratischen Abstandes zwischen den
+geschätzten Positionen und den berechneten Positionen unter der Annahme bestimmter 
+Geschwindigkeiten. Hierzu wird das Bewegungsmodell des omnidirektionalen Roboters benötigt.
+Seien $\vec{r}_t$ die Position des Roboters zum Zeitpunkt $t$ und $\phi_t$ seine Ausrichtung 
+sowie $\vec{v}_t$ bzw. $\theta_t$ seine translatorische bzw. rotatorische Geschwindigkeit zum
+Zeitpunkt $t$ in Weltkoordinaten. Unter der Annahme konstanter Geschwindigkeiten in 
+Roboterkoordinaten ist die Position des Roboters zum Zeitpunkt $t+\tau$ dann:
+\begin{align}
+\phi_{t+\tau} &= \phi_t + \theta_t\cdot\tau \quad mod \; 2\pi \\
+\vec{r}_{t+\tau} &= \begin{cases}
+\vec{r}_t + \vec{v}\cdot\tau & \text{ falls } \theta_t=0 \\
+\vec{r}_t+\frac{1}{\theta_t}  R_{\phi_t}
+\begin{pmatrix} \sin(\theta_t\tau) & \cos(\theta_t\tau)\!-\!1 \\ 1\!-\!\cos(\theta_t\tau) & \sin(\theta_t\tau) \end{pmatrix}
+R_{-\phi_t} \vec{v} & \text{ falls } \theta_t\not=0 \end{cases} \\
+\theta_{t+\tau} &= \theta_t \\
+\vec{v}_{t+\tau} &=  R_{\theta_t \tau} \vec{v}_t
+\end{align}
+mit $R_\alpha$ der Rotationsmatrix um den Winkel $\alpha$: 
+$R_\alpha = \begin{pmatrix} \cos\alpha & -\sin\alpha \\ \sin\alpha & \cos\alpha \end{pmatrix}$
+
+Das Bewegungsmodell ist offensichtlich hierarchisch: je nachdem, ob $\theta_t=0$ oder nicht wird für 
+die Berechnung der Position $\vec{r}_{t+\tau}$ eine geradlinige Fahrt oder eine Kurvenfahrt angenommen.
+
+Die Schätzung der Robotergeschwindigkeiten erfolgt unter Annahme konstanter Geschwindigkeiten über
+mehrere Iterationen hinweg. Dabei werden die letzten 10 Positionen der Selbstlokalisierung mit Zeitstempel 
+erfasst und in einem Ringpuffer zwischengespeichert. Seien diese Position bezeichnet mit $(x_i, y_i, \psi_i)$ 
+mit den Zeitstempeln $t_i$ ($i=1,\dots,n$).
+
+Unter Ausnutzung der hierarchischen Struktur des Geschwindigkeitsmodells zerfällt das Schätzproblem
+in zwei Teile:
+\begin{enumerate}
+\item Schätze die Rotationsgeschwindigkeit $\theta$ und die Ausrichtung $\phi_0$ zu einem willkürlichen
+Referenzzeitpunkt $t_0$.
+\item Schätze die Geschwindigkeit $(v_x, v_y)$ und die Roboterposition $(x_0, y_0)$ zum Referenzzeitpunkt
+$t_0$ (in Weltkoordinaten). Unterscheide die beiden Fälle $\theta=0$ und $\theta\not=0$.
+\end{enumerate}
+Als Referentzeitpunkt $t_0$ verwendet der \texttt{SLVelocitySensor} den Zeitpunkt der letzten Positionsschätzung
+der Selbstlokalisierung.
+
+\subsubsection{Bestimmung der Ausrichtung und Rotationsgeschwindigkeit}
+
+Um die Ausrichtung und Rotationsgeschwindigkeit zu schätzen, wird über den beobachteten Ausrichtungen
+ein lineares Bewegungsmodell aufgebaut. Hierbei ist zu beachten, dass die Ausrichtungen $\psi_i$ nur Werte 
+in einem Intervall der Länge $2\pi$ (z.B. $[0,2\pi)$) annehmen, im Beobachtungszeitraum aber Rotationen um
+mehr als $2\pi$ erfolgt sein können. Daher ist es notwendig, die Werte von $\psi_i$ zunächst auf die gesamten
+reellen Zahlen so abzubilden, dass die Differenz zweier zeitlich aufeinanderfolgender Ausrichtungen kleiner
+$\pi$ bleibt, d.h. $|\psi_{i+1}-\psi_i|<\pi$. Hier geht, die Annahme ein, dass sich der Roboter zwischen zwei
+Beobachtungen nie mehr als um $180$ Grad dreht.
+
+Mit den so vorbereiteten Ausrichtungen kann ein lineares Rotationsmodell geschätzt werden. Durch Berechnung
+der quadratischen Abweichung, Ableiten und Nullsetzen der partiellen Ableitungen ergibt sich folgendes lineare
+Gleichungssystem, das nach $\phi_0$ und $\theta$ aufgelöst werden kann:
+\begin{equation}
+\begin{pmatrix} n & \sum_{i=1}^n (t_i-t_0) \\ \sum_{i=1}^n (t_i-t_0) & \sum_{i=1}^n (t_i-t_0)^2 \end{pmatrix} 
+\begin{pmatrix} \phi_0 \\ \theta \end{pmatrix} = \begin{pmatrix} \sum_{i=1}^n \phi_i \\  \sum_{i=1}^n \phi_i(t_i-t_0) \end{pmatrix}
+\end{equation}
+
+\subsubsection{Bestimmung der Position und Geschwindigkeit}
+
+In Abhängigkeit von $\theta$ kann nun $x_0$, $y_0$, $v_x$ und $v_y$ bestimmt werden.
+\begin{itemize}
+\item \textbf{Fall $\theta=0$}: hier kann direkt das lineare Bewegungsmodell in den quadratischen Fehlerterm
+eingesetzt werden. Dadurch zerfällt das resultierende lineare Gleichunssystem in zwei unabhängige Gleichungssystem
+für die die $x$- und $y$-Koordinate:
+\begin{align}
+\begin{pmatrix} n & \sum_{i=1}^n (t_i-t_0) \\ \sum_{i=1}^n (t_i-t_0) & \sum_{i=1}^n (t_i-t_0)^2 \end{pmatrix} 
+\begin{pmatrix} x_0 \\ v_x \end{pmatrix} &= \begin{pmatrix} \sum_{i=1}^n x_i \\  \sum_{i=1}^n x_i(t_i-t_0) \end{pmatrix} \\
+\begin{pmatrix} n & \sum_{i=1}^n (t_i-t_0) \\ \sum_{i=1}^n (t_i-t_0) & \sum_{i=1}^n (t_i-t_0)^2 \end{pmatrix} 
+\begin{pmatrix} y_0 \\ v_y \end{pmatrix} &= \begin{pmatrix} \sum_{i=1}^n y_i \\  \sum_{i=1}^n y_i(t_i-t_0) \end{pmatrix}
+\end{align}
+\item \textbf{Fall $ \theta\not=0$}: in diesem Fall muss das Bewegungsmodell für die Kreisbewegung angesetzt
+werden. Dabei können $x$- und $y$-Koordinate nicht mehr getrennt voneinander betrachtet werden. 
+Der Fehlerterm ergibt sich zu:
+\begin{equation}
+\underset{x_0, y_0, v_x, v_y}{\mathit{minimise}} \;\;\frac{1}{2}\sum_{i=1}^n ( (r_{x, t_i} - x_i )^2 + (r_{y, t_i} - y_i )^2 )
+\end{equation}
+Durch Ableiten und Nullsetzen der Ableitung erhält man das lineare Gleichungssystem:
+\begin{equation}
+\begin{pmatrix}
+n & 0 & \sum_{i=1}^n s_i & \sum_{i=1}^n c_i \\
+0 & n & -\sum_{i=1}^n c_i & \sum_{i=1}^n s_i \\
+\sum_{i=1}^n s_i & -\sum_{i=1}^n c_i & \sum_{i=1}^n (s_i^2+c_i^2) & 0 \\
+\sum_{i=1}^n c_i & \sum_{i=1}^n s_i & 0 & \sum_{i=1}^n (s_i^2+c_i^2) 
+\end{pmatrix} 
+\begin{pmatrix} x_0 \\ y_0 \\ v_x \\ v_y \end{pmatrix}=
+\begin{pmatrix}
+\sum_{i=1}^n x_i \\
+\sum_{i=1}^n y_i \\
+\sum_{i=1}^n (s_i x_i - c_i y_i) \\
+\sum_{i=1}^n (c_i x_i + s_i y_i)
+\end{pmatrix}
+\end{equation}
+mit $s_i = \frac{\sin (\theta (t_i-t_0))}{\theta}$ und $c_i = \frac{\cos (\theta (t_i-t_0))-1}{\theta}$.
+\end{itemize}
+
+\subsection{Ballfilter basierend auf der Selbstlokalisierung}
+
+Die Schätzung von Ballposition und -geschwindigkeit erfolgt mit Hilfe einer 
+kleinsten-Quadrateschätzung (Ridge-Regression) eines linearen Bewegungsmodells über die letzten $n$ 
+Zeitpunkte, zu denen der Ball im Bild erkannt wurde. Die Klasse \texttt{DynamicSlidingWindowBallFilter} passt 
+$n$ automatisch an die aktuelle Situation an. Ist $n$ klein, so werden Bewegungsänderungen schnell erkannt,
+dafür ist die Schätzung sehr ungenau und Rausch-behaftet. Die Anpassung der Fensterlänge 
+erfolgt durch Überprüfung, ob das geschätzte Modell noch zu den neuen gemessenen Positionen
+passt. Ist die Differenz zwischen vorhergesagter und gemessener Position in zwei aufeinander
+folgenden Iterationengrößer als ein Schwellwert, wird die Fenstergröße auf das Minimalmaß 
+verringert, ansonsten werden die auflaufenden gemessenen Ballposition zwischengespeichert und
+für die nächste Schätzung des Bewegungsmodells verwendet.
+
+\paragraph*{Konfigurationsparameter}
+\begin{itemize}
+\item \texttt{BallFilter::history\_length = $n_1$ $n_2$} gibt die Fensterlänge des Ballfilters an. $n_1$ ist
+die Minimallänge, $n_2$ die Maximallänge.
+\item \texttt{BallFilter::max\_error = $d$} gibt den Schwellwert für den Prognosefehler in mm an, der zu
+einer Reduzierung der Fensterlänge führt.
+\item \texttt{BallFilter::raised\_threshold = $d_1$ $d_2$} legt fest, ab welcher erkannten Geschwindigkeit
+(in m/s) der Ball als hochgehoben gilt. $d_1$ beschreibt den unteren und $d_2$ den oberen Wert der
+dafür verwendeten Hysterese.
+\end{itemize}
+
+
+\subsection{Ballfilter basierend auf der Odometrie}
+Der Ballfilter \texttt{OdometrySlidingWindowBallFilter} verfolgt die selbe Vorgehensweise wie
+der SL-basierte Ballfilter, allerdings wird die Ballposition und -geschwindigkeit stets im 
+Roboterkoordinatensystem ausgedrückt und die Eigenbewegung des Roboters aus der Odoemtrie
+und den Fahrtvektoren berücksichtigt. Daher ergibt sich eine geringere Anfälligkeit gegen Fehler
+der Selbstlokalisierung, allerdings gehen Fehler der Odometrie, z.B. Schlupf, ein. Die 
+Konfigurationsparameter sind identisch mit denen des \texttt{DynamicSlidingWindowBallFilter}.
+
+\subsection{Ensemble von Ballfiltern}
+Um sowohl gegenüber den Ungenauigkeiten der Selbstlokalisierung als auch den Fehlern der Odometrie 
+weniger sensibel zu reagieren, wurden beide Modelle kombiniert und ein Ensemble daraus gebildet 
+(Klasse \texttt{TwinBallFilter}). Dieses Ensemble berechnet beide Ballfilter und mittelt die Ergebnisse.
+
+\subsection{Hinderniscontainer}
+Die Klasse \texttt{ObstacleContainer} realisiert die einfachste mögliche Form der Hindernisverwaltung,
+nämlich, die direkte Verwendung der zuletzt in der Bildverarbeitung erkannten Hindernisse. Eine weitere
+Analyse findet also nicht statt.
+
+\subsection{Glättender Hindernisfilter}
+In der Klasse \texttt{EMAObstacleFilter} wird über die Existenz der Hindernisse geglättet. Dadurch wird
+vermieden, dass einmalig in der Bildverarbeitung fälschlich erkannte Hindernisse ins Weltmodell
+übernommen werden bzw. dass kurzfristig nicht erkannte Hindernisse sofort aus dem Weltmodell 
+verschwinden. Dies wird erreicht, in dem intern eine Liste möglicher Hindernisse verwaltet wird und in 
+jeder Iteration mit den erkannten Hindernissen abgeglichen wird. Wird ein Hindernis mehrfach 
+hintereinander erkannt, so wird es als existent eingestuft, auch wenn es in der Folge in einzelnen 
+Iterationen nicht gesehen wird. Ein Hindernis verschwindet erst dann aus der internen Repräsentation,
+wenn es mehrere Iterationen hintereinander nicht erkannt wird. Die Einstufung in existente bzw. nicht
+existente Hindernisse und deren Fortschreibung über die Zeit erfolgt mit einem exponentiell geglätteten
+gleitenden Durchschnitt (EMA).
+\paragraph*{Konfigurationsparameter}
+\begin{itemize}
+\item \texttt{ObstacleFilter::parameters = $d_1$ $d_2$ $d_3$}. Die Parameter geben die Glättung des
+EMAs an ($d_1$, default$=0.6$), den unteren ($d_2$, default$=0.2$) sowie den oberen ($d_3$, default$=0.7$)
+Schwellwert der Hysterese an.
+\end{itemize}
+
+
+}
+\end{document}

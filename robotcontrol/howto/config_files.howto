@@ -1,0 +1,352 @@
+--------------------------------------------------------
+Uebersicht ueber die Parameter der Konfigurationsdateien
+--------------------------------------------------------
+
+ALLGEMEINE EINSTELLUNGEN:
+
+own_half = blue|yellow
+  legt die Orientierung des Spieles fest durch Angabe des eigenen Tors
+
+loop_time = INT
+  legt die Regelschleifen-Solldauer in Millisekunden fest
+
+random_seed = UINT [optional]
+  legt den Seed fuer den Zufallszahlengenerator fest
+
+Journal::output = FILENAME|stdout|stderr|memory
+  legt die Ausgabedatei fuer das Protokoll fest
+  FILENAME: schreibe Protokollinformation direkt in Datei FILENAME
+  stdout,stderr: schreibe direkt in den angegebenen Stream
+  memory: speichere Information im Hauptspeicher bis zum Beenden des Programms
+
+Journal::flush = FILENAME [optional, default Ausgabe auf stderr, nur bei Journal::output=memory]
+  schreibe alle im Hauptspeicher abgelegten Protokollinformationen am 
+  Programmende in Datei FILENAME
+
+Journal::verbosity = 1|2|3 [optional, default=1]
+  legt fest, welche Mitteilungen protokolliert werden sollen
+  1: nur Fehlermeldungen
+  2: Fehlermeldungen und Warnungen
+  3: alle Mitteilungen
+
+initial_position = FLOAT FLOAT [optional]
+  legt die Anfangsposition des Roboters im Weltmodell fest
+
+initial_position = FLOAT FLOAT FLOAT [optional]
+  legt die Anfangsposition des Roboters im Weltmodell und Orientierung in Grad fest
+
+
+
+SOFTWAREKONFIGURATION:
+
+robot_type = Dummy|File|OmniRobot_Tribot|Simulator
+  legt den Robotertyp fest
+  Dummy: keine Ansteuerung, nur fuer Testzwecke
+  File: liest Odometrie- und Fahrtvektoren aus Dateien ein, fuer Testzwecke
+  OmniRobot_Tribot: die Tribots-Roboter in Hardware
+  Simulator: simsrv-Simulation
+
+player_type = Dummy|JoystickPlayer|GoaliePadua
+  legt den Spielertyp fest
+  Dummy: liest Fahrbefehl aus Konfigurationsdatei, nur fuer Testzwecke
+  JoystickPlayer: Steuerung des Roboters mit dem Joystick
+  GoaliePadua: autonome Steuerung als Goalie
+
+world_model_type = Dummy|File|Simulator|CondensationWorldModel|ErrorMinimiser
+  legt den Typ des Weltmodells fest
+  Dummy: tut nichts, liest Sollwerte aus robotcontrol.config, nur 
+                   fuer Testzwecke
+  File: liest Roboter- und Ballpositionen aus Dateien ein, nur fuer Tests
+  Simulator: Weltmodell fuer Anbindung des Simulators
+  CondensationWorldModel: Weltmodell basierend auf dem Condensationfilter
+                          arbeitet mit erkannten Toren und weissen Linien
+  ErrorMinimiser: Weltmodell mit ErrorMinimiser-Selbstlokalisiation
+                  arbeitet mit erkannten Toren und weissen Linien
+
+image_processing_type = Dummy|File|Simulator
+  legt den Typ der Bildverarbeitung fest
+  Dummy: tut nichts, nur fuer Testzwecke
+  File: liest erkannte Objekte aus Datei, nur fuer Testzwecke
+  Simulator: erzeugt eine kuenstliche Sicht auf Grundlage des Simulators
+             liefert Tore und weisse Linien
+
+add_joystick_player = 0|1 [optional, default=0]
+  legt fest, ob zusaetzlich zum player_type der Roboter mit dem Joystick 
+  gesteuert werden koennen soll (1) oder nicht (0)
+
+add_write_world_model = 0|1 [optional, default=0]
+  legt fest, ob die Weltmodellinformation zusaetzlich in Dateien
+  rausgeschrieben werden sollen
+
+write_world_model_info = FILENAME [optional, default="wminfo"]
+  legt den Stammnamen der Datei fest, in die Weltmodellinformationen
+  geschrieben werden sollen
+
+visual_info_file = FILENAME [optional]
+ball_pos_file = FILENAME [optional]
+robot_pos_file = FILENAME [optional]
+obstacle_file = FILENAME [optional]
+odometry_file = FILENAME [optional]
+drive_vector_file = FILENAME [optional]
+gamestate_file = FILENAME [optional]
+  Dateien, aus denen die jeweiligen Informationen gelesen werden sollen,
+  wird von den jeweiligen "File"-Varianten der Bildverarbeitung/Weltmodell/
+  Roboter-Komponente verwendet
+
+
+
+
+PARAMETER FUER JOYSTICKBETRIEB [nur bei Joystickbetrieb]:
+
+Joystick::joystick_device = DEVICENAME
+  legt das Joystickdevice fest
+
+Joystick::axis = NAT NAT NAT [optional, default=0 1 2]
+  legt die verwendeten Joystick-Achsen fuer x-, y- und Drehbewegungen fest
+
+Joystick::diraxis = +1|-1 +1|-1 +1|-1 [optional, default=+1 -1 -1]
+  legt die Orientierung der Joystick-Achsen fest
+
+Joystick::buttons = NAT NAT NAT NAT NAT [optional, default=2 8 9 1 0]
+  legt die verwendeten Knoepfe fest; in der Reihenfolge:
+  kicken, Geschwindigkeit reduzieren, Geschwindigkeit erhoehen,
+  Roboter starten, Roboter stoppen
+
+
+
+PARAMETER FUER SIMULATORBETRIEB [nur bei Simulatorbetrieb]:
+
+Simulator::robot_config_file = FILENAME
+  legt das Roboter-Konfigurationsfile des Simulators fest (siehe 
+  simsrv-Dokumentation)
+
+SimulatorImageProcessing::noise_level = FLOAT
+  legt das Rauschen (Standardabweichung) der Sensormessungen fest
+
+SimulatorImageProcessing::mis_probability = FLOAT
+  legt die Wahrscheinlichkeit fest, mit der Objekte nicht erkannt werden
+
+SimulatorImageProcessing::goal_mis_probability = FLOAT
+  legt die Wahrscheinlichkeit fest, mit der Tore nicht erkannt werden
+
+SimulatorImageProcessing::ball_mis_probability = FLOAT
+  legt die Wahrscheinlichkeit fest, mit der der Ball nicht erkannt wird
+
+SimulatorImageProcessing::line_vision_radius = FLOAT
+  legt den Radius um den Roboter fest (in mm), innerhalb dessen Linien
+  erkannt werden
+
+
+
+PARAMETER FUER BETRIEB DER ROBOTER-HARDWARE [nur bei Anbindung der Hardware]:
+
+communication = blocking|nonblocking
+  legt fest, ob blockierende oder nichtblockierende Ansteuerung genutzt 
+  werden soll
+
+robot_config_file = FILENAME
+  legt das Roboter-Konfigurationsfile fest
+
+hardware_error_log = FILENAME
+  legt fest, in welcher Datei Hardwarefehler protokolliert werden sollen
+
+hardware_info_log = FILENAME
+  legt fest, in welcher Datei Hardwareinfos protokolliert werden sollen
+
+
+
+FELDGEOMETRIE:
+
+siehe Diagramm "field_geometry.fig"
+
+FieldGeometry::lineset_type = center_circle | center_triangle | center_triangle_inv [default = center_circle]
+  legt fest, welche Spielfeldmarkierung angenommen wird
+  center_circle: symmetrische Anordnung mit Mittelkreis
+  center_triangle: Anordnung mit Mittel-Dreieck, Spitze des Dreiecks weist in Richtung blaues Tor
+  center_triangle_inv: Anordnung mit Mittel-Dreieck, Spitze des Dreiecks weist in Richtung gelbes Tor
+
+
+
+PARAMETER FUER WorldModelDummy [nur bei Verwendung des Weltmodelltyps WorldModelDummy]:
+
+WorldModelDummy::robot = FLOAT FLOAT FLOAT FLOAT FLOAT FLOAT [optional, default= 0,0,0,0,0,0]
+  ermoeglicht die Vorgabe einer bestimmten Roboterposition (arg1-arg3) sowie 
+  -Geschwindigkeit (arg4-arg6); Angaben in mm, Grad, m/s, rad/s
+
+WorldModelDummy::kick = 0|1 [optional, default=0]
+  ermoeglicht die Vorgabe von Kickinformation
+
+WorldModelDummy::ball = FLOAT FLOAT FLOAT FLOAT [optional, default= 0,0,0,0]
+  ermoeglicht die Vorgabe einer bestimmten Ballposition (arg1-arg2) sowie 
+  -Geschwindigkeit (arg3-arg4); Angaben in mm, m/s
+
+
+
+PARAMETER FUER PlayerDummy:
+
+PlayerDummy::vtrans = FLOAT FLOAT [optional, default=0,0]
+  die auszugebende translative Geschwindigkeit in m/s
+
+PlayerDummy::vrot = FLOAT [optional, default=0]
+  die auszugebende Rotationsgeschwindigkeit in rad/s
+
+
+
+PARAMETER FUER CondensationFilter:
+
+CondensationFilter::number_particles = FLOAT FLOAT FLOAT FLOAT [Parameter 2, 3 und 4 optional]
+  Anzahl Partikel: Minimalzahl, Maximalzahl, Anzahl beim Starten, 
+  Anzahl zufaellig gestreuter Partikel in jeder Iteration
+
+CondensationFilter::spread_factors = FLOAT FLOAT
+  Breite der Verteilung, mit der die Partikel gestreut werden
+  Arg1: fuer Translation, Arg2: fuer Rotation (in Grad)
+
+CondensationFilter::sensor_probabilities = FLOAT FLOAT FLOAT
+  Parameter fuer die sensorischen Wahrscheinlichkeiten
+  Arg1: Breite der Abweichungen weisser Linien
+  Arg2: Minimaler Dichtewert fuer Abweichung weisser Linien
+  Arg3: Wahrscheinlichkeit, ein Tor auf der falschen Seite zu erkennen
+
+CondensationFilter::auto_reinit_waiting_time = UINT [optional, default=0]
+  Anzahl Zyklen, die gewartet werden soll, bis ein reinit (komplett neue 
+  Partikelmenge) gemacht werden soll, wenn der Verdacht besteht, dass sich
+  der Roboter verloren hat. 0 schaltet diese Funktionalitaet aus.
+
+CondensationFilter::trimrate = DOUBLE [optional, default=0]
+  legt fest, ob ein getrimmter Schaetzer verwendet werden soll und gibt
+  die Trimmrate an
+
+CondensationFilter::consider_goals = BOOL [optional, default=false]
+  gibt an, ob anhand der Tore die Orientierung geprueft werden soll
+
+
+
+PARAMETER FUER ErrorMinimiserSL:
+
+ErrorMinimiserSL::error_width = FLOAT [optional, default=250]
+  gibt die Breite der Fehlerfunktion in mm an. Sollte als Haelfte der 
+  normalerweise maximal auftretenden Abweichung gewaehlt werden.
+
+ErrorMinimiserSL::consider_goals = BOOL [optional, default=true]
+  gibt an, ob anhand der Tore die Orientierung geprueft werden soll
+
+ErrorMinimiserSL::use_internal_alternatives = BOOL [optional, default=true]
+  gibt an, ob die Selbstlokalisation um die Odoemtrieposition herum weitere
+  Suchpositionen bearbeiten soll; im Sinne einer verbesserten lokalen 
+  Lokalisierung
+
+ErrorMinimiserSL::number_external_alternatives = UINT [optional, default=1]
+  gibt an, wie viele gaenzliche Alternativpositionen im Sinne der globalen 
+  Lokalisierung die Selbstlokalisation untersuchen soll 
+
+
+
+PARAMETER FUER OdometrySlidingWindowBallFilter und DynamicSlidingWindowBallFilter:
+
+BallFilter::history_length = UINT UINT [optional, default=3 10]
+  legt die minimale und maximale Laenge des Fensters fest, ueber das die
+  Ballposition bestimmt wird;
+  Arg1: Minimallaenge
+  Arg2: Maximallaenge (nur fuer DynamicSlidingWindowBallFilter)
+
+BallFilter::max_error = FLOAT [optional, default=500]
+  legt fest, welche Abweichung zwischen Modell und Messung zur Verkleinerung
+  des Fensters beim DynamicSlidingWindowBallFilter fuehrt. Angabe in mm.
+
+BallFilter::raised_threshold = FLOAT FLOAT [optional, default=7 10]
+  legt fest, ab welchen geschaetzten Geschwindigkeiten der Ball als angehoben gilt
+  Arg1: unterer Wert der Hysterese
+  Arg2: oberer Wert der Hysterese
+
+
+
+PARAMETER FUER EMAObstacleFilter:
+
+ObstacleFilter::parameters = FLOAT FLOAT FLOAT [optional, default = 0.6, 0.2, 0.7]
+  Arg1: Glaettung des EMA-Filters (je groesser desto staerkere Glaettung)
+  Arg2: unterer Schwellwert der Hysterese
+  Arg3: oberer Schwellwert der Hysterese
+
+
+
+PARAMETER FUER GoaliePadua (vergleiche auch Doku zum GoaliePadua) [nur bei Verwendung des Spielertyps GoaliePadua]:
+
+GoaliePadua::home_y_pos = FLOAT [optional, default=800]
+  Grundposition des Torwarts, Angabe des Abstands in mm, in dem der Goalie 
+  vor dem Tor steht
+
+GoaliePadua::circle_half_width = FLOAT [optional, default=1500]
+  Abstand der Schnittpunkte des Goaliekreises mit der Torauslinie, Abstand in 
+  mm vom Tormittelpunkt
+
+GoaliePadua::attack_area_radius = FLOAT [optional, default=2000]
+  Radius des Ball-Angriffbereichs in mm
+
+GoaliePadua::attack_area_angle = FLOAT [optional, default=45]
+  Winkel in Grad gegenueber der Seitenlinie, der an die Torpfosten angelegt den 
+  Ball-Angriffsbereich seitlich abgrenzt
+
+GoaliePadua::reference_points = FLOAT FLOAT [optional, default= 200 500]
+  Refernzpunkte RNear und RFar, gemessen in mm hinter dem Torauslinie
+
+GoaliePadua::distance_y = FLOAT [optional, default=300]
+  Mindestabstand in mm, den der Goalie von der Torauslinie halten sollte, 
+  sofern er nicht nach dem Ball fischt
+
+GoaliePadua::max_turning = FLOAT [optional, default=60]
+  Maximalauslenkung des Goalies in Grad; bei Goalie mit Fluegeln muss Wert auf 
+  ca. 40 gestellt werden
+
+GoaliePadua::kick_permission = 0|1 [optional, default=1]
+  soll der Goalie kicken duerfen (1) oder nicht (0); geeignet fuer Tests
+
+
+
+ROBOTER-DYNAMIK und -GEOMETRIE (pauschalierte Werte fuer die Pfadplanung):
+
+RobotProperties::max_velocity = FLOAT
+  maximale translative Geschwindigkeit in m/s
+
+RobotProperties::max_acceleration = FLOAT
+  maximale translative Beschleunigung in m/(s*s)
+
+RobotProperties::max_deceleration = FLOAT
+  maximale translative Bremsverzoegerung in m/(s*s)
+  sollte vom Wert her etwa ein Viertel der Beschleunigung betragen
+
+RobotProperties::max_rotational_velocity = FLOAT
+  maximale Rotationsgeschwindigkeit in rad/s
+
+RobotProperties::max_rotational_acceleration = FLOAT
+  maximale rotative Bremsverzoegerung in rad/(s*s)
+
+RobotProperties::max_rotational_deceleration = FLOAT
+  maximale rotative Beschleunigung in rad/(s*s)
+  sollte vom Wert her etwa ein Viertel der BEschleunigung betragen
+
+RobotProperties::max_robot_radius = FLOAT
+  kleinster Radius ab Robotermittelpunkt, so dass der Roboter vollstaendig vom 
+  Kreis ueberdeckt wird; in mm
+
+RobotProperties::min_robot_radius = FLOAT
+  kleinster Radius ab Robotermittelpunkt, so dass der Kreis vollstaendig vom 
+  Roboter ueberdeckt wird; in mm
+
+RobotProperties::robot_width = FLOAT
+  maximale Breite des Roboters eines vorwaerts fahrenden Roboters; in mm
+
+RobotProperties::robot_length = FLOAT
+  maximale Laenge des Roboters eines vorwaerts fahrenden Roboters; in mm
+
+RobotProperties::kicker_width = FLOAT
+  Breite der Schussvorrichtung in mm
+
+RobotProperties::kicker_distance = FLOAT
+  Abstand der Schussvorrichtung vom Robotermittelpunkt
+
+
+
+robotCtrlLib-PARAMETER:
+
+siehe Robot_cfg.howto

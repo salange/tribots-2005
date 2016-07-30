@@ -1,0 +1,249 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{german}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{geometry}
+
+\title{Architektur und Programmierkonventionen der Roboter-Ansteuerungssoftware Brainstormers Tribots}
+\author{Martin Lauer}
+
+\geometry{
+  body={16.8cm, 24.3cm},
+  left=2.8cm,
+  top=2.5cm
+}
+
+
+\begin{document}
+\maketitle
+
+\section{Grundstrukturen}
+
+\subsection{Ziele}
+
+\begin{itemize}
+\item Modularer Aufbau, um Kern-Komponenten getrennt von anderen betreiben zu können
+\item klare Aufgabenaufteilung zwischen Komponenten
+\item schmale öffentliche Schnittstellen
+\item Flexibilität: unterschiedliche Implementierungen einer Komponente sollen
+problemlos ausgetauscht werden können
+\item aber dennoch: Übersichtlichkeit und Effizienz
+\end{itemize}
+
+\subsection{Realisierung}
+
+\begin{itemize}
+\item Schichtenstruktur (siehe Abb. \ref{fig:komponenten}): Aufgabengliederung nach 
+allgemeiner (bibliotheksartiger) Funktionalität, Datenstrukturen, Kernfunktionalität, 
+Kontrollfunktionen
+\item Kernfunktionalität wird durch drei voneinander unabhängigen Komponenten realisiert
+(Roboter, Strategie=Player, Bildverarbeitung) sowie dem von den anderen Komponenten
+aus zugreifbaren Weltmodell.
+\item Koppelung von Kontrollfluss wird in der Kontrollebene realisiert, bestehend aus
+der Kontrollschleife sowie Kommunikations- und Benutzschnittstelle
+\end{itemize}
+\begin{sidewaysfigure}
+\begin{center}
+\includegraphics[width=0.9\textwidth]{komponenten}
+\caption{Aufteilung der Gesamtaufgabe in vier Schichten mit verschiedenen Komponenten. 
+Die Komponenten einer höheren Schicht können auf die Funktionalität der darunterliegenden
+Schichten zugreifen, nicht jedoch auf die höherer Schichten.}
+\label{fig:komponenten}
+\end{center}
+\end{sidewaysfigure}
+
+\subsection{Typischer Ablauf}
+
+\begin{itemize}
+\item Regelschleife übernimmt Kontrolle des Ablaufs
+\item Abfolge: Bild auswerten, Weltmodell aktualisieren,
+Entscheidungskomponente Fahrtvektor berechnen lassen, Roboterkomponente Fahrtbefehl 
+ausführen lassen, Benutzerschnittstelle Zeit geben, um ggf. einzugreifen
+\item Informationsaustausch wird mit Zeitstempeln versehen
+\item Alle Informationen, die den Spielzustand (Situation auf dem Spielfeld, Spielstand)
+betreffen, werden über das Weltmodell kommuniziert.
+\end{itemize}
+\begin{figure}
+\includegraphics[width=\textwidth]{datenfluss}
+\caption{Datenfluss zwischen den vier Komponenten der Komponentenschicht sowie zur Kontrollschicht.}
+\label{fig:datenfluss}
+\end{figure}
+
+\subsection{Einzelne Aspekte}
+
+\subsubsection{Designkonflikt "`cmotion"'}
+
+\begin{itemize}
+\item Problem: Strategie berechnet Fahrbefehl, der ggf. vom Roboter nicht umgesetzt werden kann
+\item verschiedene Roboterbauarten mit unterschiedlichen Eigenschaften möglich
+\item Lösungsansatz:
+\begin{itemize}
+\item Strategiekomponente bekommt bei Initialisierung die Grundfähigkeiten des Roboters mitgeteilt 
+(pauschaliert), d.h. Maximalgeschwindigkeit, Maximalbeschleunigung, maximale Bremsverzögerung 
+(translatorisch sowie rotatorisch), Größe des Roboters, um damit die Bewegung berechnen zu können
+\item Mit dem Aufruf von \texttt{set\_drive\_vector()} wird der Roboter angesteuert. Dabei überprüft
+die Roboterkomponente die Realisierbarkeit des Ansteuerbefehls und wandelt diesen ggf. ab.
+\item nicht die Strategiekomponente sondern die Roboterkomponente teil den tatsächlich angesteuerten 
+Fahrbefehl dem Weltmodell mit
+\end{itemize}
+\end{itemize}
+
+\subsubsection{"`Sandwichschnittstelle"'}
+
+bezieht sich auf die Komponenten mit der Kernfunktionalität (Roboter, Entscheidung, Weltmodell, 
+Bildverarbeitung). Exemplarisch an der Entscheidungskomponente in Abb. \ref{fig:sandwichschnittstelle}
+dargestellt.
+\begin{itemize}
+\item Problem: Verschiedene Realisierungen einer Komponente sollen austauschbar sein
+\item Lösung: abstrakte Klasse als Schnittstelle (z.B. \texttt{PlayerType})
+\item weiteres Problem: wer übernimmt die Verwaltung der verschiedenen Varianten (Initialisierung, Spielertypwechsel)?
+\item schlechte Lösung: Kontrollschicht übernimmt die Verwaltung. Schlecht, da Vermischung der Aufgaben 
+von Komponentenschicht und Kontrollschicht. Änderungen/Erweiterungen der Komponentenschicht
+erfordern Veränderungen der Kontrollschicht.
+\item andere schlechte Lösung: die jeweilige Komponente liefert auf Anfrage einen Zeiger auf ein entsprechendes Objekt. 
+Schlecht, da Gefahr des Herumvagabundierens von Zeigern.
+\item Vorschlag ("`Sandwichschnittstelle"'): Schnittstelle besteht aus zwei Klassen, eine definiert die funktionale
+Schnittstelle ("`Schnittstelle nach innen"', z.B. \texttt{PlayerType}) und legt fest, was die Komponente können soll.
+Die andere Klasse ("`Schnittstelle nach außen"', z.B. \texttt{Player}) übernimmt die Verwaltungsfunktionalität und ist
+Ansprechpartner für alle Belange, die diese Komponente betreffen: nur diese Klasse ist nach außen bekannt.
+Verwaltungsaufgaben werden von dieser Klasse selbst erledigt, Anfragen bezüglich der funktionalen Schnittstelle
+(z.B. \newline\texttt{process\_drive\_vector()}) leitet sie an die "`Schnittstelle nach innen"' weiter.
+\item Vorteil: Selbstverwaltung der Komponenten, ControlLoop greift nicht in die Komponenten selbst ein, eindeutiger
+Ansprechpartner jeder Komponente, Initialisierungen und Typwechsel aus Konfigurationsdatei (mit Hilfe von ValueReader) 
+bzw. über strings.
+\end{itemize}
+\begin{figure}
+\includegraphics[width=\textwidth]{sandwichschnittstelle}
+\caption{Sandwichschnittstelle für die Entscheidungskomponente, gebildet aus den
+beiden Klassen \texttt{Player} und \texttt{PlayerType}.}
+\label{fig:sandwichschnittstelle}
+\end{figure}
+
+\subsubsection{Rolle und Realisierung des Weltmodells}
+
+Weltmodell soll:
+\begin{itemize}
+\item Das Weltmodell soll Informationen über die Situation auf dem Spielfeld sammeln, verarbeiten und aufbereiten
+\item Aufbereitete Sensorinformation (erkannte Objekte im Bild, ausgeführte Fahrbefehle, gemessene Odometrie)
+werden dem Weltmodell -- mit Zeitstempel versehen -- direkt mitgeteilt (mittels \texttt{set\_xxx}-Funktionen).
+\item Alle Komponenten können Informationen vom Weltmodell abfragen (mittels \texttt{get\_xxx}-Funktionen).
+\item Das Weltmodell ist selbst dafür verantwortlich, wann und wie die Informationen verarbeitet werden.
+Die \texttt{update}-Methode ist nur eine Empfehlung, die Informationen jetzt ins Weltbild einzuarbeiten.
+\item Das Weltmodell ist selbst für die Konsistenz der Information verantwortlich (z.B. Konsistenz von Zeitstempeln).
+\item Die eigentliche Repräsentation der Informationen bleibt das Geheimnis des Weltbildes, ein Zugriff von
+außen auf seine Attribute wird unterbunden.
+\item Explizit nicht ins Weltbild gehören alle Informationen, die nur innerhalb einer Komponente benötigt werden
+(z.B. Pixelkoordinaten im Bild) oder die nur zur Kontrolle und Überwachung auf der Kontrollebene benötigt werden
+(z.B. Spielertyp).
+\item Das Weltmodell erhält eine Sandwichschnittstelle, um alternative Realisierungen durch Ableiten zu ermöglichen.
+\end{itemize}
+
+\subsection{Ausnahmebehandlung und Protokoll (Logfile)}
+
+\begin{itemize}
+\item Zur Kommunikation von Ausnahmen können (sollen) Exceptions verwendet werden
+\item Verwende nach Möglichkeit nur von der Klasse \texttt{TribotsException} abgeleitete Exceptions
+(außer ggf. in Bibliotheksschicht)
+\item die einzelnen Komponenten dürfen \textit{nur} bei der Initialisierung Exceptions nach außen werfen,
+ansonsten müssen alle Exceptions gefangen und behandelt werden! Keinesfalls darf eine
+Ausnahme zum Abbruch der Kontrollschleife führen (\texttt{ControlLoop::loop}) (außer bei Initialisierung),
+auch nicht beim Spielertypwechsel o.ä.
+\item Ausnahmen nicht als Ersatz für eine Protokollierung von Fehlsituationen verstehen; Aufgetretene Schwierigkeiten
+nicht ignorieren oder mit leeren \texttt{catch}-Blöcken vermeindlich unschädlich machen.
+\item Fehlerzustände, Warnungen und sonstige Meldungen können mit der Klasse \texttt{Journal} verarbeitet
+werden, die eine Protokollierung, sofortiges oder verzögertes Schreiben in eine Datei oder nach stdout/stderr 
+erlaubt
+\item verwende die Makros \texttt{JERROR(}\textit{Fehlertext}\texttt{)} zur Protokollierung von gravierenden
+Fehlern/Problemen, verwende \texttt{JWARNING} zur Protokollierung von Warnungen, d.h. unerwünschte, aber nicht 
+gravierende Probleme, sowie \texttt{JMESSAGE} zur Protokollierung sonstiger Informationen.
+\end{itemize}
+
+
+\subsubsection{Minderbedeutende Punkte}
+
+\begin{itemize}
+\item Verwende den Namespace \texttt{Tribots}, für interne Hilfsfunktionen verwende unbenannte Namespaces; in der 
+bibliotheksartigen Schicht können auch andere Namespaces verwendet werden
+\item möglichst wenige \texttt{\#define}-Direktiven, statt dessen Parameter mittels ValueReader aus Konfigurationsdatei lesen
+\item Verwendung von STL-Klassen in Schnittstellen zwischen Komponenten vermeiden, ansonsten erlaubt
+\end{itemize}
+
+
+
+\section{Konventionen}
+
+\subsection{Physikalische Einheiten}
+
+alle physikalischen Größen werden in folgenden Einheiten gemessen:
+\begin{itemize}
+\item Entfernungen in $mm$
+\item Geschwindigkeiten in $\frac{m}{s}$
+\item Beschleunigungen in $\frac{m}{s^2}$
+\item Winkel in $rad$
+\item Winkelgeschwindigkeiten in $\frac{rad}{s}$
+\item rotative Beschleunigungen in $\frac{rad}{s^2}$
+\item Zeit i.d.R. in $ms$
+\end{itemize}
+
+\subsection{Koordinatensysteme und Orientierung}
+
+\begin{itemize}
+\item Roboterkoordinatensystem: vorne ($y>0$), hinten ($y<0$), rechts ($x>0$), links ($x<0$)
+(siehe Abb. \ref{fig:roboterkoordinaten})
+\item Weltkoordinatensystem: Ursprung ist Feldmittelpunkt, die Orientierung des Koordinatensystems 
+richtet sich nach der Ausrichtung des Spiels: in Richtung des gegnerischen Tors ($y>0$), in Richtung
+des eigenen Tors ($y<0$), sowie rechte Seite ($x>0$) und linke Seite ($x<0$).
+(siehe Abb. \ref{fig:feldkoordinaten})
+\item Codierung der Spielrichtung (durch ein \texttt{int}): Spiel vom blauen auf das gelbe Tor ($-1$),
+sowie Spiel vom gelben auf das blaue Tor ($+1$)
+\item Drehsinn: im Gegenuhrzeigersinn (Winkel positiv), um Uhrzeigersinn (Winkel negativ)
+\end{itemize}
+
+\begin{figure}
+\begin{center}
+\includegraphics[width=4cm]{roboterkoordinatensystem}
+\caption{Roboterkoordinatensystem}
+\label{fig:roboterkoordinaten}
+\end{center}
+\end{figure}
+\begin{figure}
+\begin{center}
+\includegraphics[width=12cm]{feldkoordinaten}
+\caption{Koordinatensystem des Spielfeldes}
+\label{fig:feldkoordinaten}
+\end{center}
+\end{figure}
+
+\subsection{Kommentierungen und Dokumentation}
+
+\begin{itemize}
+\item Kommentierungen im Doxygen-Stil
+\item Kurze Kommentierung aller in Headern deklarierter Klassen, Methoden, Funktionen such Angabe von: 
+Aufgabe, Argumente, Rückgabewerte, Seiteneffekte, Sondersituationen
+\item Ausführliche Dokumentation von größeren Algorithmen (z.B. Pseudocode, mathematische Beschreibung)
+\item Ausführliche, ggf. externe Dokumentation größerer Softwarestrukturen, z.B. interner Aufbau 
+einer Komponente
+\item Kurze Kommentierung der Klassen-Attribute
+\end{itemize}
+
+
+
+\section{Demo-Implementierung/Code-Gerüst}
+
+\begin{itemize}
+\item Regelschleife vollständig implementiert
+\item Terminal-basierte Benutzerschnittstelle in einfacher Form vohanden (wird mit 'q' beendet, mit $<$space$>$ 
+kann man die 'Situation' von 0 auf 5 und umgekehrt ändern (soll später sein: Roboter starten/anhalten))
+\item Hauptkomponenten als Dummy vorhanden: schreiben die jeweiligen Funktionsaufrufe in das Terminal
+\item Joystick-Anbindung realisiert
+\item Strukturen aus der Strukturschicht weitgehend vorhanden. Erweiterungen/Änderungen möglich
+\item Basisfunktionalität vorhanden, soweit wie für diese einfache Anwendung benötigt
+\item Beispielhafte Konfigurationsdatei vorhanden (robotcontrol.config)
+\item Aufruf: robotcontrol $<$Konfigurationsdatei$>$
+\item alle Header sind kommentiert.
+\end{itemize}
+
+
+
+\end{document}

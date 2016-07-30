@@ -1,0 +1,14 @@
+-----------------------------------------------------------------------------------
+Beschreibung der Factory, die verwendet wurde, um unterschiedliche Realisierungen
+fuer die Komponenten Robot, Player, ImageProcessing und WorldModel zu ermoeglichen:
+-----------------------------------------------------------------------------------
+
+Beschreibung anhand der Player-Komponente, fuer andere Komponenten analog.
+
+- es existiert eine Factory (Klasse PlayerFactory), die die moeglichen Spielertypen
+  verwaltet
+- jeder Spielertyp benoetigt:
+  1. eine konkrete Realisierung des Spielertyps, abgeleitet von Klasse PlayerType
+  2. eine Builder-Klasse abgeleitet von Klasse PlayerBuilder, die zum einen den 
+     Spieleryp bei der Factory anmeldet und zum anderen ggf. ein Objekt des 
+     Spielertyps erzeugt. Beispielhaft siehe Datei PlayerDummy.cc

@@ -1,0 +1,20 @@
+1. Module installieren (falls nicht bereits installiert): "joydev" und "hid"
+2. in robotcontrol.config den player_type auf JoystickPlayer setzen 
+   (Steuerung ausschliesslich mit Joystick) oder 
+   add_joystick_player auf 1 setzen
+   (zusaetzliche Eingriffsmoeglichkeit mit dem Joystick) oder
+   in der Konsole 'J' druecken (auf Joystick umschalten)
+3. Belegung des Joysticks wird mit den Kofigurationszeilen
+   Joystick::axis
+   Joystick::diraxis
+   Joystick::buttons
+   festgelegt. Falls diese Werte nicht angegeben sind, gilt:
+   Achsen 0 & 1: translative Bewegung relativ zur Roboterausrichtung
+   Achse 2: rotative Bewegung
+   Knopf 0: Roboter anhalten (fuer add_joystick_player)
+   Knopf 1: Roboter starten (fuer add_joystick_player)
+   Knopf 2: kicken
+   Knopf 8: Maximalgeschwindigkeit verringern
+   Knopf 9: Maximalgeschwindigkeit erhoehen
+
+  

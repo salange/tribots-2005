@@ -1,0 +1,448 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>imageview</class>
+<widget class="QWidget">
+    <property name="name">
+        <cstring>imageview</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>640</width>
+            <height>518</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Imageview</string>
+    </property>
+    <property name="toolTip" stdset="0">
+        <string>Zeigt aufgezeichnete Bilder an</string>
+    </property>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>textLabel2</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>490</y>
+                <width>74</width>
+                <height>20</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Dateiname:</string>
+        </property>
+    </widget>
+    <widget class="Tribots::CImageWidget">
+        <property name="name">
+            <cstring>imageWidget</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>640</width>
+                <height>480</height>
+            </rect>
+        </property>
+        <property name="sizePolicy">
+            <sizepolicy>
+                <hsizetype>7</hsizetype>
+                <vsizetype>7</vsizetype>
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+            </sizepolicy>
+        </property>
+    </widget>
+    <widget class="QCheckBox">
+        <property name="name">
+            <cstring>freeze</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>540</x>
+                <y>490</y>
+                <width>96</width>
+                <height>22</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>einfrieren</string>
+        </property>
+        <property name="toolTip" stdset="0">
+            <string>Anzeige einfieren</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>textLabel3</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>350</x>
+                <y>490</y>
+                <width>80</width>
+                <height>20</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>Zeitstempel:</string>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>timestampInfo</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>430</x>
+                <y>490</y>
+                <width>90</width>
+                <height>22</height>
+            </rect>
+        </property>
+        <property name="readOnly">
+            <bool>true</bool>
+        </property>
+    </widget>
+    <widget class="QLineEdit">
+        <property name="name">
+            <cstring>filenameInfo</cstring>
+        </property>
+        <property name="enabled">
+            <bool>true</bool>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>80</x>
+                <y>490</y>
+                <width>250</width>
+                <height>22</height>
+            </rect>
+        </property>
+        <property name="palette">
+            <palette>
+                <active>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>238</red>
+                        <green>234</green>
+                        <blue>222</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>252</blue>
+                    </color>
+                    <color>
+                        <red>85</red>
+                        <green>85</green>
+                        <blue>82</blue>
+                    </color>
+                    <color>
+                        <red>198</red>
+                        <green>198</green>
+                        <blue>191</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>238</red>
+                        <green>238</green>
+                        <blue>230</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>221</green>
+                        <blue>118</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>192</blue>
+                    </color>
+                    <color>
+                        <red>128</red>
+                        <green>0</green>
+                        <blue>128</blue>
+                    </color>
+                </active>
+                <disabled>
+                    <color>
+                        <red>128</red>
+                        <green>128</green>
+                        <blue>128</blue>
+                    </color>
+                    <color>
+                        <red>238</red>
+                        <green>234</green>
+                        <blue>222</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>252</blue>
+                    </color>
+                    <color>
+                        <red>85</red>
+                        <green>85</green>
+                        <blue>82</blue>
+                    </color>
+                    <color>
+                        <red>198</red>
+                        <green>198</green>
+                        <blue>191</blue>
+                    </color>
+                    <color>
+                        <red>198</red>
+                        <green>198</green>
+                        <blue>191</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>128</red>
+                        <green>128</green>
+                        <blue>128</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>238</red>
+                        <green>238</green>
+                        <blue>230</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>212</red>
+                        <green>184</green>
+                        <blue>98</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>192</blue>
+                    </color>
+                    <color>
+                        <red>128</red>
+                        <green>0</green>
+                        <blue>128</blue>
+                    </color>
+                </disabled>
+                <inactive>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>238</red>
+                        <green>234</green>
+                        <blue>222</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>252</blue>
+                    </color>
+                    <color>
+                        <red>85</red>
+                        <green>85</green>
+                        <blue>82</blue>
+                    </color>
+                    <color>
+                        <red>198</red>
+                        <green>198</green>
+                        <blue>191</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>255</green>
+                        <blue>255</blue>
+                    </color>
+                    <color>
+                        <red>238</red>
+                        <green>238</green>
+                        <blue>230</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>255</red>
+                        <green>221</green>
+                        <blue>118</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>0</blue>
+                    </color>
+                    <color>
+                        <red>0</red>
+                        <green>0</green>
+                        <blue>192</blue>
+                    </color>
+                    <color>
+                        <red>128</red>
+                        <green>0</green>
+                        <blue>128</blue>
+                    </color>
+                </inactive>
+            </palette>
+        </property>
+        <property name="backgroundOrigin">
+            <enum>WidgetOrigin</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Sunken</enum>
+        </property>
+        <property name="frame">
+            <bool>true</bool>
+        </property>
+        <property name="readOnly">
+            <bool>true</bool>
+        </property>
+    </widget>
+</widget>
+<customwidgets>
+    <customwidget>
+        <class>Tribots::CImageWidget</class>
+        <header location="local">../components/imagewidget.h</header>
+        <sizehint>
+            <width>-1</width>
+            <height>-1</height>
+        </sizehint>
+        <container>0</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+        <slot access="public" specifier="">setImage(const Image&amp; image)</slot>
+        <slot access="public" specifier="">slot()</slot>
+    </customwidget>
+</customwidgets>
+<images>
+    <image name="image0">
+        <data format="XBM.GZ" length="79">789c534e494dcbcc4b554829cdcdad8c2fcf4c29c95030e0524611cd48cd4ccf28010a1797249664262b2467241641a592324b8aa363156c15aab914146aadb90067111b1f</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>freeze</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>imageview</receiver>
+        <slot>toggleFreeze(bool)</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in implementation">../../ImageProcessing/ImageSources/FileSource.h</include>
+    <include location="local" impldecl="in implementation">../../ImageProcessing/ImageIO.h</include>
+    <include location="local" impldecl="in implementation">../../ImageProcessing/JPEGIO.h</include>
+    <include location="local" impldecl="in implementation">imageview.ui.h</include>
+</includes>
+<forwards>
+    <forward>using namespace Tribots;</forward>
+    <forward>namespace Tribots { class FileSource; }</forward>
+</forwards>
+<variables>
+    <variable>int freezed;</variable>
+    <variable>FileSource *imgSource;</variable>
+</variables>
+<slots>
+    <slot>showImage( int cycle )</slot>
+    <slot>toggleFreeze( bool b )</slot>
+    <slot>loadImages( QString filename, int cycle )</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+</functions>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>tribots::cimagewidget.h</includehint>
+</includehints>
+</UI>

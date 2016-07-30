@@ -1,0 +1,55 @@
+# Achtung: zusaetzliche Quelldateien (.cc,...) zuerst in robotcontrol.sources eintragen!
+
+# Name des Zielprogramms:
+TRGT = robotcontrol
+
+SUFFECES = .c .cc .cpp .cxx .c++ .C
+SRCS = $(shell cat robotcontrol.sources)
+OBJS = $(filter %.o,$(foreach suf,$(SUFFECES),$(SRCS:$(suf)=.o)))
+
+CC = g++         # icecc
+LC = g++         # icecc chooses the wrong linker    
+LIB_PATH = -LLibs/robotCtrLib -LLibs/libjpeg-6b
+LIBS = -ljpeg -lncurses -lrobotCtr -ldc1394_control -lraw1394 
+INCLUDE_PATH = -ILibs/robotCtrLib/include -ILibs/jpeg-6b
+CFLAGS = -Wall -O
+
+
+# zur Ausblendung des Simulators folgende 3 Zeilen auskommentieren:
+#LIB_PATH += -LSimulator/simsrv2/tribotClient 
+#LIBS += -ltribotclient
+#CFLAGS += -DUSE_SIMULATOR
+
+
+# TARGETS:
+
+$(TRGT): $(OBJS)
+	$(LC) $(CFLAGS) $(LIB_PATH) -o $(TRGT) $(OBJS) $(LIBS)
+
+%.o : %.cc
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) -c -o $@ $<
+
+%.o : %.c
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) -c -o $@ $<
+
+%.o : %.cpp
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) -c -o $@ $<
+
+%.o : %.cxx
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) -c -o $@ $<
+
+%.o : %.c++
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) -c -o $@ $<
+
+%.o : %.C
+	$(CC) $(CFLAGS) $(INCLUDE_PATH) -c -o $@ $<
+
+clean:
+	rm $(OBJS) $(TRGT)
+
+depend:
+	makedepend $(INCLUDE_PATH) $(SRCS)
+
+
+# DO NOT DELETE THIS LINE -- make depend depends on it
+

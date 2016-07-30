@@ -1,0 +1,133 @@
+\documentclass[11pt,a4paper,twocolumn]{article}
+\usepackage[latin1]{inputenc}
+\usepackage{german}
+\usepackage{graphicx}
+\usepackage{rotating}
+\usepackage{geometry}
+
+\title{Kalibrierungsanleitung tribots\_console}
+\author{Sascha Lange}
+
+
+\geometry{
+  body={15.8cm, 24.3cm},
+  left=2.8cm,
+  top=2.5cm
+}
+
+\sloppy
+
+\begin{document}
+\maketitle
+
+\section*{Schritt 1: Blende}
+Die Blende der Kamera ganz aufdrehen, um die Belichtungszeit möglichst kurz
+halten zu können.
+
+\section*{Schritt 2: Kamera einrichten}
+
+coriander starten und folgende Einstellungen im
+Reiter ``Features'' vornehmen:\\
+\begin{tabular}{|l|l|}
+\hline
+Parameter     & Wert \\
+\hline
+brightness    & 128 \\
+\hline
+saturation    & 128 \\
+\hline
+hue           & 128 \\
+\hline
+auto exposure & 128 (Man) \\
+\hline
+white balance & auto \\
+\hline
+sharpness     & 0 \\
+\hline
+gamma         & 128 \\
+\hline
+shutter       & auto \\
+\hline
+gain          & auto \\
+\hline
+\end{tabular}\\
+Dann im Reiter ``Camera'' im Feld ``Memory channels'' Setup1 auswählen und
+Save drücken. Die Kameraeinstellungen werden von der alten Software beim
+Programmstart aus Memory Channel 1 geladen.
+
+\section*{Schritt 3: Maske erstellen und Bildmittelpunkt}
+Falls nötig muss nun mit dem tool ImageMask
+der neuen Software eine Maske zum ausmaskieren der Roboterhardware aus dem
+Bild erstellt werden. Im Programm robot\_test
+kann man sehen, ob die Erstellung einer neuen Maske notwendig ist: Treffen
+die Scanlinien auf das Kameragestell oder die sonstige Teile des Roboters,
+hat sich die Kamera vermutlich verschoben und die Erstellung einer neuen 
+Maske ist notwendig.
+
+Hierzu wird nun das Werkzeug ImageMask in der
+neuen Software gestartet. Den Roboter sollte man so platzieren, dass sich
+in seinem Sichtfeld ein deutlicher Farbübergang befindet. Die einfachste 
+Lösung ist es, den Roboter auf eine Teppichkante oder so weit wie möglich
+in ein Tor zu stelln. Dann drückt man auf den Knopf capture. Der Roboter 
+dreht sich nun für ein paar Sekunden und die Bilder werden aufgezeichnet. 
+Die Bild-zu-Bild Abweichung des Farbwertes eines jeden Pixels wird während
+dieses Vorgangs gemittelt. Die Idee ist, dass sich die Farbe der Pixel, die
+zum Roboter gehören, während der Drehung kaum ändern. Mit dem Regler links
+kann man nun einen guten Schwellwert einstellen (die Streben der 
+Kamerahalterung sollten nicht unterbrochen sein). Ggf. kann man den Vorgang
+einfach wiederholen, um ein besseres Ergebnis zu erzielen. 
+
+Nun speichert man die erzeugte Maske als ppm und trägt den Dateinamen in der
+Konfigurationsdatei beim Feld {\it robot\_mask} ein (automatisch geht dies nur 
+in der neuen Architektur).
+
+\section*{Schritt 4: Distanzkalibrierung}
+
+Beschreibung fehlt noch. Stefan W.?
+
+\section*{Schritt 5: Farben einstellen}
+
+Zuerst mal robot\_test starten.
+Nun müssen nacheinander mindestens die Farben rot, weiss, grün richtig 
+eingestellt werden (bei der neuen Architektur wird grün nicht beachtet). 
+Schwarz für die Hindernisse ist auch ratsam. Die eingezeichneten grünen 
+Kreise geben darüber Aufschluß, wo mit den derzeitigen Einstellungen 
+Linien gesehen werden.
+
+Schritt für Schritt Anleitung:
+
+\begin{enumerate}
+\item Lookuptabelle ausschalten (damit die Regler aktiviert werden)
+\item Load drücken (um die Reglerstellungen zu laden)
+\item Farbe auswählen. Beim ersten mal nach dem Laden erst auf eine andere
+      Farbe und dann wieder aus Weiss schalten, da beim Laden die Regler nicht
+      richtig initialisiert werden.
+\item Die Regler komplett aufziehen (min nach links, max nach rechts)
+\item Nun den Bereich so einschränken, dass nur noch die richtigen Pixel
+      klassifiziert werden. Zuerst den Winkel (Farbwert) dann den Radius
+      (Sättigung) und zuletzt die Helligkeit einstellen, um Schwarz und Weiss
+      zu trennen. Bei Farben lässt man den Sättigungsregler für max meist
+      ganz rechts und schiebt nur den min-Regler. Bei Nichtfarben verfährt
+      man genau andersherum.
+\item Mit Punkt 3 fortfahren, bis alle Farben eingestellt sind.
+\item Save drücken, um die Reglerstellungen für spätere Nachkalibrierungen
+      abzuspeichern.
+\item Lookuptabelle anschalten (erst hierduch wird die Datei lastyuv.lut mit
+      den neuen Reglerstellungen erzeugt).
+\item Programm verlassen.
+\end{enumerate}
+
+\section*{Schritt 6: ScanLine-Algorithmus auswählen}
+
+Es gibt mehrere ScanLine-Algorithmen, die je nach Umgebungsbedingungen 
+besser oder schlechter funktionieren. Derzeit ist auf allen Robotern 
+die ``new-irgendwas'' eingestellt und useDemoLineTransitionDetector ist auf
+false. Diese Einstellung sollte in den Konfigurationsdateien nicht ohne
+weiteres geändert werden, da sonst auch eine Änderung der Schwellwerte für
+die Übergänge nötig ist. Was der genaue Unterschied der einzelnen 
+Algorithmen ist: Derzeit kein Ahnung!
+
+
+
+
+\end{document}

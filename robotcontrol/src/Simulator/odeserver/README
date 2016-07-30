@@ -1,0 +1,12 @@
+odeserver ist ein neuer Simulator mit ode, der bis jetzt nur von 1 Roboter
+angesteuert werden kann. Der server wird derzeit auf derselben Maschine
+gestartet, und wartet bis sich der Client tribots_console_odesim verbindet.
+
+odeserver ist eine Weiterentwicklung von joy.pro und kann ebenfalls mit
+joystick gesteuert werden
+
+Die benötigten Libraries sind dabei.
+
+
+
+2004, Stefan Welker 

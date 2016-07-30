@@ -1,0 +1,20 @@
+1. Aufruf von robotcontrol mit Konfigurationsdatei als Parameter
+2. Interaktion mit dem Programm:
+   
+   Starten und stoppen des Roboters:
+   'g': startet den Spieler
+   't': startet den Spieler nach i.d.R. 10 Sekunden (fuer manuellen Start)
+        Wartezeit kann im Konfigurationsfile angegeben werden
+   '1'-'9': startet den Spieler fuer n Iterationen der Regelschleife
+            ("Einzelschrittmodus")
+   ' ': stoppt den Spieler
+
+   Spielertypwechsel:
+   'J': schaltet auf den JoystickPlayer um
+   'G': schaltet auf den GoaliePadua um
+
+   Sonstige Funktionen:   
+   's': wechselt die Spielfeldhaelfte
+   'f': zeichnet den Bildschirm neu
+   'p': reinitialisiert die Selbstlokalisierung
+   'q','x': beendet das Programm

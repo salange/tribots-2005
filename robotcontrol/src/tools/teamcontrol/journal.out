@@ -1,0 +1,30 @@
+142277 Error in ../../Communication/tribotsUdpCommunicationBuffer.cc, 360: Status vom CommunicationBuffer :
+e_send_buffer_full             :0
+e_put_to_buffer_full           :0
+e_put_to_buffer_tobig          :0
+e_set_receive_buffer           :0
+e_set_receive_buffer_tobig     :0
+e_get_next_buffer_tobig        :0
+e_receive_unknow_data          :0
+e_receive_data_checksum        :0
+w_receive_to_old       :1284
+
+fortlaufende_paketnummer       :1070
+fortlaufende_paketnummer_remote:2034
+stat_data_send (byte)          :568800
+stat_data_receive (byte)       :213564
+stat_max_nutzdatenlaenge_send  :49
+stat_max_nutz..laenge_send_art :'b'
+stat_max_bufferlaenge_send     :3045
+stat_data_send_prio_wichtig    :12
+stat_data_send_prio_normal     :1069
+stat_data_send_prio_optional   :0
+
+pakete im _ausgang             :6
+pakete im _eingang             :0
+plaetze die _frei sind         :94
+_wichtig                       :0
+_normal                        :6
+_optional                      :0
+
+

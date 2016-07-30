@@ -1,0 +1,12 @@
+Kleines Testprogramm, dass kontinuierlich Bilder von einer Bildquelle holt und
+anzeigt.
+
+1. cd src/tools/IIDCMonitor
+2. qmake 
+3. make
+4. ./IIDCMonitor ${Pfad_zu_config_Dateien}/image_producer.cfg
+
+Beenden durch schlieﬂen des Fensters.
+
+Das Programm liest inzwischen die Konfigurationsdatei und kann daher auch
+andere Bildquellen als die IIDC Klasse (digitale Kamera) anzeigen.

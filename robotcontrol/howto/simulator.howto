@@ -1,0 +1,26 @@
+1. Simulatorquellcode in geeignetes Verzeichnis legen und uebersetzen
+2. Pfade und Umgebungsvariablen setzen (am besten in .bashrc eintragen)
+   SIMULATOR:       Simulatorverzeichnis
+   QTDIR:           Qt-Verzeichnis, i.d.R. /usr/share/qt3
+   LD_LIBRARY_PATH: setzen auf "${QTDIR}/lib:${SIMULATOR}/tribotClient"
+3. in ... robotcontrol/src/Simulator den symbolischen Link "simsrv2" anlegen 
+   auf $SIMULATOR
+4. in robotcontrol.config world_model_type auf SimulatorWorldModel und
+   robot_type auf SimulatedTribot setzen
+5. Simulator starten
+6. robotcontrol starten
+
+um das Weltmodell mit dem Simulator zu testen muss image_processing_type auf
+Simulator gesetzt werden.
+
+
+------------------------------------------------
+Uebersetzen des Codes ohne verfuegbaren simsrv2:
+------------------------------------------------
+
+1. im makefile die 3 markierten Zeilen auskommentieren:
+   #LIB_PATH += -LSimulator/simsrv2/tribotClient
+   #LIBS += -ltribotclient
+   #CFLAGS += -DUSE_SIMULATOR
+2. Simulator/SimClient.o loeschen und neu uebersetzen
+

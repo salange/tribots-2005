@@ -1,0 +1,1173 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>mainWindow</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>mainWindow</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>892</width>
+            <height>526</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Tribots ColorTool</string>
+    </property>
+    <widget class="QComboBox">
+        <property name="name">
+            <cstring>colorSelector</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>10</x>
+                <y>10</y>
+                <width>140</width>
+                <height>30</height>
+            </rect>
+        </property>
+        <property name="toolTip" stdset="0">
+            <string>select the color to edit</string>
+        </property>
+    </widget>
+    <widget class="QFrame">
+        <property name="name">
+            <cstring>frame3</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>60</y>
+                <width>250</width>
+                <height>80</height>
+            </rect>
+        </property>
+        <property name="frameShape">
+            <enum>StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Raised</enum>
+        </property>
+        <widget class="QSlider">
+            <property name="name">
+                <cstring>hMinSlider</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>40</x>
+                    <y>10</y>
+                    <width>150</width>
+                    <height>29</height>
+                </rect>
+            </property>
+            <property name="focusPolicy">
+                <enum>ClickFocus</enum>
+            </property>
+            <property name="maxValue">
+                <number>360</number>
+            </property>
+            <property name="pageStep">
+                <number>60</number>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="tickmarks">
+                <enum>Both</enum>
+            </property>
+            <property name="tickInterval">
+                <number>60</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>minimum of h channel</string>
+            </property>
+        </widget>
+        <widget class="QSlider">
+            <property name="name">
+                <cstring>hMaxSlider</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>40</x>
+                    <y>40</y>
+                    <width>150</width>
+                    <height>29</height>
+                </rect>
+            </property>
+            <property name="focusPolicy">
+                <enum>ClickFocus</enum>
+            </property>
+            <property name="maxValue">
+                <number>360</number>
+            </property>
+            <property name="pageStep">
+                <number>60</number>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="tickmarks">
+                <enum>Both</enum>
+            </property>
+            <property name="tickInterval">
+                <number>60</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>maximum of h channel</string>
+            </property>
+        </widget>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>textLabel3</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>24</width>
+                    <height>60</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>25</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string>H</string>
+            </property>
+            <property name="alignment">
+                <set>WordBreak|AlignCenter</set>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>hue (color)</string>
+            </property>
+        </widget>
+        <widget class="QSpinBox">
+            <property name="name">
+                <cstring>hMinLabel</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>200</x>
+                    <y>10</y>
+                    <width>40</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="maxValue">
+                <number>360</number>
+            </property>
+        </widget>
+        <widget class="QSpinBox">
+            <property name="name">
+                <cstring>hMaxLabel</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>200</x>
+                    <y>40</y>
+                    <width>40</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="maxValue">
+                <number>360</number>
+            </property>
+            <property name="alignment" stdset="0">
+                <string>AlignCenter</string>
+            </property>
+        </widget>
+    </widget>
+    <widget class="QFrame">
+        <property name="name">
+            <cstring>frame4</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>140</y>
+                <width>250</width>
+                <height>80</height>
+            </rect>
+        </property>
+        <property name="frameShape">
+            <enum>StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Raised</enum>
+        </property>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>textLabel3_2</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>24</width>
+                    <height>60</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>25</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string>S</string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>saturation</string>
+            </property>
+        </widget>
+        <widget class="QSlider">
+            <property name="name">
+                <cstring>sMinSlider</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>40</x>
+                    <y>10</y>
+                    <width>150</width>
+                    <height>29</height>
+                </rect>
+            </property>
+            <property name="backgroundOrigin">
+                <enum>WidgetOrigin</enum>
+            </property>
+            <property name="focusPolicy">
+                <enum>ClickFocus</enum>
+            </property>
+            <property name="maxValue">
+                <number>100</number>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="tickmarks">
+                <enum>Both</enum>
+            </property>
+            <property name="tickInterval">
+                <number>10</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>minimum of s-channel</string>
+            </property>
+        </widget>
+        <widget class="QSlider">
+            <property name="name">
+                <cstring>sMaxSlider</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>40</x>
+                    <y>40</y>
+                    <width>150</width>
+                    <height>29</height>
+                </rect>
+            </property>
+            <property name="focusPolicy">
+                <enum>ClickFocus</enum>
+            </property>
+            <property name="maxValue">
+                <number>100</number>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="tickmarks">
+                <enum>Both</enum>
+            </property>
+            <property name="tickInterval">
+                <number>10</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>maximum of s-channel</string>
+            </property>
+        </widget>
+        <widget class="QSpinBox">
+            <property name="name">
+                <cstring>sMinLabel</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>200</x>
+                    <y>10</y>
+                    <width>40</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="maxValue">
+                <number>100</number>
+            </property>
+        </widget>
+        <widget class="QSpinBox">
+            <property name="name">
+                <cstring>sMaxLabel</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>200</x>
+                    <y>40</y>
+                    <width>40</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="maxValue">
+                <number>100</number>
+            </property>
+        </widget>
+    </widget>
+    <widget class="QFrame">
+        <property name="name">
+            <cstring>frame5</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>220</y>
+                <width>250</width>
+                <height>80</height>
+            </rect>
+        </property>
+        <property name="frameShape">
+            <enum>StyledPanel</enum>
+        </property>
+        <property name="frameShadow">
+            <enum>Raised</enum>
+        </property>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>textLabel3_2_2</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>10</x>
+                    <y>10</y>
+                    <width>24</width>
+                    <height>60</height>
+                </rect>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>25</pointsize>
+                </font>
+            </property>
+            <property name="text">
+                <string>I</string>
+            </property>
+            <property name="alignment">
+                <set>AlignCenter</set>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>intensity / value</string>
+            </property>
+        </widget>
+        <widget class="QSlider">
+            <property name="name">
+                <cstring>iMinSlider</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>40</x>
+                    <y>10</y>
+                    <width>150</width>
+                    <height>29</height>
+                </rect>
+            </property>
+            <property name="focusPolicy">
+                <enum>ClickFocus</enum>
+            </property>
+            <property name="maxValue">
+                <number>100</number>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="tickmarks">
+                <enum>Both</enum>
+            </property>
+            <property name="tickInterval">
+                <number>10</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>mimimum of i-channel</string>
+            </property>
+        </widget>
+        <widget class="QSlider">
+            <property name="name">
+                <cstring>iMaxSlider</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>40</x>
+                    <y>40</y>
+                    <width>150</width>
+                    <height>29</height>
+                </rect>
+            </property>
+            <property name="focusPolicy">
+                <enum>ClickFocus</enum>
+            </property>
+            <property name="maxValue">
+                <number>100</number>
+            </property>
+            <property name="orientation">
+                <enum>Horizontal</enum>
+            </property>
+            <property name="tickmarks">
+                <enum>Both</enum>
+            </property>
+            <property name="tickInterval">
+                <number>10</number>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string>maximum of i-channel</string>
+            </property>
+        </widget>
+        <widget class="QSpinBox">
+            <property name="name">
+                <cstring>iMinLabel</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>200</x>
+                    <y>10</y>
+                    <width>40</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="maxValue">
+                <number>100</number>
+            </property>
+        </widget>
+        <widget class="QSpinBox">
+            <property name="name">
+                <cstring>iMaxLabel</cstring>
+            </property>
+            <property name="geometry">
+                <rect>
+                    <x>200</x>
+                    <y>40</y>
+                    <width>40</width>
+                    <height>20</height>
+                </rect>
+            </property>
+            <property name="maxValue">
+                <number>100</number>
+            </property>
+        </widget>
+    </widget>
+    <widget class="Tribots::CImageWidget">
+        <property name="name">
+            <cstring>imageWidget</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>250</x>
+                <y>0</y>
+                <width>640</width>
+                <height>480</height>
+            </rect>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>LUTLabel</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>320</y>
+                <width>201</width>
+                <height>51</height>
+            </rect>
+        </property>
+        <property name="font">
+            <font>
+                <pointsize>35</pointsize>
+            </font>
+        </property>
+        <property name="text">
+            <string>textLabel1</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>subColroButton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>160</x>
+                <y>450</y>
+                <width>80</width>
+                <height>21</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>sub</string>
+        </property>
+        <property name="accel">
+            <string>-</string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>addColorButton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>160</x>
+                <y>420</y>
+                <width>81</width>
+                <height>21</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>add</string>
+        </property>
+        <property name="accel">
+            <string>+</string>
+        </property>
+    </widget>
+    <widget class="QLabel">
+        <property name="name">
+            <cstring>colorField</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>20</x>
+                <y>381</y>
+                <width>121</width>
+                <height>90</height>
+            </rect>
+        </property>
+        <property name="backgroundMode">
+            <enum>PaletteBackground</enum>
+        </property>
+        <property name="text">
+            <string></string>
+        </property>
+    </widget>
+    <widget class="QPushButton">
+        <property name="name">
+            <cstring>setColorButton</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>160</x>
+                <y>387</y>
+                <width>81</width>
+                <height>21</height>
+            </rect>
+        </property>
+        <property name="text">
+            <string>set</string>
+        </property>
+        <property name="accel">
+            <string>Shift+S</string>
+        </property>
+    </widget>
+</widget>
+<menubar>
+    <property name="name">
+        <cstring>MenuBar</cstring>
+    </property>
+    <item text="&amp;File" name="fileMenu">
+        <action name="fileNewAction"/>
+        <action name="fileOpenAction"/>
+        <action name="fileSaveAction"/>
+        <action name="fileSaveAsAction"/>
+        <separator/>
+        <separator/>
+        <action name="fileQuickload_DefaultsAction"/>
+        <action name="fileQuaicksave_DefaultsAction"/>
+        <action name="fileExitAction"/>
+        <separator/>
+    </item>
+    <item text="LookupTable" name="LookupTable">
+        <action name="createLookupTableAction"/>
+        <action name="loadLookupTableAction"/>
+        <action name="saveLookupTableAction"/>
+        <action name="saveAsLookupTableAction"/>
+        <separator/>
+        <action name="useLookupTableAction"/>
+    </item>
+    <item text="&amp;Help" name="helpMenu">
+        <action name="helpContentsAction"/>
+        <action name="helpIndexAction"/>
+        <separator/>
+        <action name="helpAboutAction"/>
+    </item>
+    <item text="View" name="View">
+        <action name="ToggleOrigImage"/>
+        <action name="viewnextColorAction"/>
+        <action name="viewpreviousColorAction"/>
+    </item>
+</menubar>
+<toolbars>
+</toolbars>
+<customwidgets>
+    <customwidget>
+        <class>Tribots::CImageWidget</class>
+        <header location="local">../components/imagewidget.h</header>
+        <sizehint>
+            <width>-1</width>
+            <height>-1</height>
+        </sizehint>
+        <container>0</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+        <slot access="public" specifier="">setImage(const Image&amp; image)</slot>
+        <slot access="public" specifier="">slot()</slot>
+    </customwidget>
+</customwidgets>
+<actions>
+    <action>
+        <property name="name">
+            <cstring>fileNewAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset></iconset>
+        </property>
+        <property name="text">
+            <string>New</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;New</string>
+        </property>
+        <property name="accel">
+            <string>N</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileOpenAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset></iconset>
+        </property>
+        <property name="text">
+            <string>Open</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Open...</string>
+        </property>
+        <property name="accel">
+            <string>O</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileSaveAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset></iconset>
+        </property>
+        <property name="text">
+            <string>Save</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Save</string>
+        </property>
+        <property name="accel">
+            <string>S</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileSaveAsAction</cstring>
+        </property>
+        <property name="text">
+            <string>Save As</string>
+        </property>
+        <property name="menuText">
+            <string>Save &amp;As...</string>
+        </property>
+        <property name="accel">
+            <string></string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileExitAction</cstring>
+        </property>
+        <property name="text">
+            <string>Exit</string>
+        </property>
+        <property name="menuText">
+            <string>E&amp;xit</string>
+        </property>
+        <property name="accel">
+            <string></string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>helpContentsAction</cstring>
+        </property>
+        <property name="text">
+            <string>Contents</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Contents...</string>
+        </property>
+        <property name="accel">
+            <string></string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>helpIndexAction</cstring>
+        </property>
+        <property name="text">
+            <string>Index</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;Index...</string>
+        </property>
+        <property name="accel">
+            <string></string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>helpAboutAction</cstring>
+        </property>
+        <property name="text">
+            <string>About</string>
+        </property>
+        <property name="menuText">
+            <string>&amp;About</string>
+        </property>
+        <property name="accel">
+            <string></string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>useLookupTableAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>Use Lookup Table</string>
+        </property>
+        <property name="statusTip">
+            <string>Use the present lookup table to segment the image. Sliders will be deactivated.</string>
+        </property>
+        <property name="accel">
+            <string>Shift+S</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>createLookupTableAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset></iconset>
+        </property>
+        <property name="text">
+            <string>Create Lookup Table</string>
+        </property>
+        <property name="statusTip">
+            <string>Create a lookup table from the present settings of the sliders.</string>
+        </property>
+        <property name="accel">
+            <string>Shift+C</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>loadLookupTableAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset></iconset>
+        </property>
+        <property name="text">
+            <string>Open Lookup Table..</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>saveLookupTableAction</cstring>
+        </property>
+        <property name="iconSet">
+            <iconset></iconset>
+        </property>
+        <property name="text">
+            <string>Save Lookup Table</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>saveAsLookupTableAction</cstring>
+        </property>
+        <property name="text">
+            <string>Save Lookup Table As..</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>ToggleOrigImage</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="on">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>ViewOriginalImage</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewnextColorAction</cstring>
+        </property>
+        <property name="text">
+            <string>nextColor</string>
+        </property>
+        <property name="menuText">
+            <string>nextColor</string>
+        </property>
+        <property name="accel">
+            <string>2</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>viewpreviousColorAction</cstring>
+        </property>
+        <property name="text">
+            <string>previousColor</string>
+        </property>
+        <property name="menuText">
+            <string>previousColor</string>
+        </property>
+        <property name="accel">
+            <string>1</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileQuickload_DefaultsAction</cstring>
+        </property>
+        <property name="text">
+            <string>Quickload Defaults</string>
+        </property>
+        <property name="menuText">
+            <string>Quickload Defaults</string>
+        </property>
+        <property name="accel">
+            <string>F3</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fileQuaicksave_DefaultsAction</cstring>
+        </property>
+        <property name="text">
+            <string>Quicksave Defaults</string>
+        </property>
+        <property name="menuText">
+            <string>Quicksave Defaults</string>
+        </property>
+        <property name="toolTip">
+            <string>Load slider values and LUT from Default paths</string>
+        </property>
+        <property name="accel">
+            <string>F2</string>
+        </property>
+    </action>
+</actions>
+<images>
+    <image name="image0">
+        <data format="XBM.GZ" length="79">789c534e494dcbcc4b554829cdcdad8c2fcf4c29c95030e0524611cd48cd4ccf28010a1797249664262b2467241641a592324b8aa363156c15aab914146aadb90067111b1f</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>fileNewAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>fileNew()</slot>
+    </connection>
+    <connection>
+        <sender>fileOpenAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>fileOpen()</slot>
+    </connection>
+    <connection>
+        <sender>fileSaveAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>fileSave()</slot>
+    </connection>
+    <connection>
+        <sender>fileSaveAsAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>fileSaveAs()</slot>
+    </connection>
+    <connection>
+        <sender>fileExitAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>fileExit()</slot>
+    </connection>
+    <connection>
+        <sender>helpIndexAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>helpIndex()</slot>
+    </connection>
+    <connection>
+        <sender>helpContentsAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>helpContents()</slot>
+    </connection>
+    <connection>
+        <sender>helpAboutAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>helpAbout()</slot>
+    </connection>
+    <connection>
+        <sender>colorSelector</sender>
+        <signal>activated(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>colorChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>hMinLabel</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>hMinChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>hMaxLabel</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>hMaxChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sMinLabel</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>sMinChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sMaxLabel</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>sMaxChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>iMinLabel</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>iMinChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>iMaxLabel</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>iMaxChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>hMinSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>hMinChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>hMaxSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>hMaxChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sMinSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>sMinChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>sMaxSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>sMaxChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>iMinSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>iMinChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>iMaxSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>iMaxChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>useLookupTableAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>useLookupTable(bool)</slot>
+    </connection>
+    <connection>
+        <sender>createLookupTableAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>createLookupTable()</slot>
+    </connection>
+    <connection>
+        <sender>saveLookupTableAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>saveLookupTable()</slot>
+    </connection>
+    <connection>
+        <sender>saveAsLookupTableAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>saveAsLookupTable()</slot>
+    </connection>
+    <connection>
+        <sender>loadLookupTableAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>openLookupTable()</slot>
+    </connection>
+    <connection>
+        <sender>ToggleOrigImage</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>mainWindow</receiver>
+        <slot>toggleOrigImage(bool)</slot>
+    </connection>
+    <connection>
+        <sender>viewnextColorAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>nextColor()</slot>
+    </connection>
+    <connection>
+        <sender>viewpreviousColorAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>previousColor()</slot>
+    </connection>
+    <connection>
+        <sender>fileQuickload_DefaultsAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>slotQuickLoad()</slot>
+    </connection>
+    <connection>
+        <sender>fileQuaicksave_DefaultsAction</sender>
+        <signal>activated()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>slotQuickSave()</slot>
+    </connection>
+    <connection>
+        <sender>setColorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>setColor()</slot>
+    </connection>
+    <connection>
+        <sender>addColorButton</sender>
+        <signal>clicked()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>addColor()</slot>
+    </connection>
+    <connection>
+        <sender>subColroButton</sender>
+        <signal>clicked()</signal>
+        <receiver>mainWindow</receiver>
+        <slot>subColor()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="global" impldecl="in declaration">string</include>
+    <include location="local" impldecl="in implementation">colorTool.ui.h</include>
+</includes>
+<forwards>
+    <forward>namespace Tribots {class ConfigReader;  class ImageProducer; class Image;}</forward>
+    <forward>class GrabbingThread;</forward>
+</forwards>
+<variables>
+    <variable>double lastH;</variable>
+    <variable>QString filename;</variable>
+    <variable>bool slidersActivated;</variable>
+    <variable>Tribots::Image* image;</variable>
+    <variable>std::string configFileName;</variable>
+    <variable>Tribots::ConfigReader* configReader;</variable>
+    <variable>Tribots::ImageProducer* producer;</variable>
+    <variable>GrabbingThread* grabbingThread;</variable>
+    <variable>QString lutFilename;</variable>
+    <variable>double lastS;</variable>
+    <variable>double lastI;</variable>
+</variables>
+<slots>
+    <slot>initSlidersAndLabels()</slot>
+    <slot>run()</slot>
+    <slot>colorChanged( int c )</slot>
+    <slot>activateSliders( bool act )</slot>
+    <slot>hMinChanged( int min )</slot>
+    <slot>hMaxChanged( int max )</slot>
+    <slot>sMinChanged( int min )</slot>
+    <slot>sMaxChanged( int max )</slot>
+    <slot>iMinChanged( int min )</slot>
+    <slot>iMaxChanged( int max )</slot>
+    <slot>updateRanges()</slot>
+    <slot>fileNew()</slot>
+    <slot>fileOpen()</slot>
+    <slot>openLookupTable()</slot>
+    <slot>fileSave()</slot>
+    <slot>saveRanges()</slot>
+    <slot>fileSaveAs()</slot>
+    <slot>saveLookupTable()</slot>
+    <slot>saveAsLookupTable()</slot>
+    <slot>doSaveLookupTable()</slot>
+    <slot>fileExit()</slot>
+    <slot>helpIndex()</slot>
+    <slot>helpContents()</slot>
+    <slot>createLookupTable()</slot>
+    <slot>useLookupTable( bool a )</slot>
+    <slot>helpAbout()</slot>
+    <slot>toggleOrigImage( bool showIt )</slot>
+    <slot>slotImageWidgetClicked( QMouseEvent * ev )</slot>
+    <slot>setColor()</slot>
+    <slot>addColor()</slot>
+    <slot>subColor()</slot>
+    <slot>nextColor()</slot>
+    <slot>previousColor()</slot>
+    <slot>slotQuickLoad()</slot>
+    <slot>slotQuickSave()</slot>
+</slots>
+<functions>
+    <function access="private" specifier="non virtual">init()</function>
+    <function access="private" specifier="non virtual">destroy()</function>
+</functions>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>tribots::cimagewidget.h</includehint>
+</includehints>
+</UI>

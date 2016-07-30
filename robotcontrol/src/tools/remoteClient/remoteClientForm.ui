@@ -1,0 +1,616 @@
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
+<class>Form1</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>Form1</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>339</width>
+            <height>324</height>
+        </rect>
+    </property>
+    <property name="sizePolicy">
+        <sizepolicy>
+            <hsizetype>1</hsizetype>
+            <vsizetype>1</vsizetype>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+    </property>
+    <property name="minimumSize">
+        <size>
+            <width>21</width>
+            <height>120</height>
+        </size>
+    </property>
+    <property name="paletteBackgroundColor">
+        <color>
+            <red>238</red>
+            <green>238</green>
+            <blue>230</blue>
+        </color>
+    </property>
+    <property name="caption">
+        <string>RemoteControl</string>
+    </property>
+    <widget class="QTabWidget">
+        <property name="name">
+            <cstring>tabWidgetMain</cstring>
+        </property>
+        <property name="geometry">
+            <rect>
+                <x>0</x>
+                <y>0</y>
+                <width>330</width>
+                <height>278</height>
+            </rect>
+        </property>
+        <property name="sizePolicy">
+            <sizepolicy>
+                <hsizetype>0</hsizetype>
+                <vsizetype>0</vsizetype>
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+            </sizepolicy>
+        </property>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <attribute name="title">
+                <string>Verbindung</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBoxPort</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>70</y>
+                        <width>120</width>
+                        <height>50</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Port</string>
+                </property>
+                <widget class="QSpinBox">
+                    <property name="name">
+                        <cstring>spinBoxPort</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>20</x>
+                            <y>20</y>
+                            <width>70</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="maxValue">
+                        <number>100000</number>
+                    </property>
+                    <property name="value">
+                        <number>6012</number>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox6</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>210</x>
+                        <y>70</y>
+                        <width>110</width>
+                        <height>50</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Kom Zyklus (ms)</string>
+                </property>
+                <widget class="QSpinBox">
+                    <property name="name">
+                        <cstring>spinBoxComCycle</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>20</x>
+                            <y>20</y>
+                            <width>60</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="maxValue">
+                        <number>2000</number>
+                    </property>
+                    <property name="minValue">
+                        <number>100</number>
+                    </property>
+                    <property name="lineStep">
+                        <number>50</number>
+                    </property>
+                    <property name="value">
+                        <number>200</number>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox3</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>10</y>
+                        <width>320</width>
+                        <height>60</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Verbindung (IP, numerisch oder Hostname)</string>
+                </property>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>comboBoxIP</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>280</width>
+                            <height>28</height>
+                        </rect>
+                    </property>
+                    <property name="editable">
+                        <bool>true</bool>
+                    </property>
+                    <property name="insertionPolicy">
+                        <enum>AtBottom</enum>
+                    </property>
+                    <property name="duplicatesEnabled">
+                        <bool>false</bool>
+                    </property>
+                </widget>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>tab</cstring>
+            </property>
+            <attribute name="title">
+                <string>Spiel</string>
+            </attribute>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox1</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>10</y>
+                        <width>320</width>
+                        <height>80</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Spielzustand</string>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButtonGameState_Go</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>50</y>
+                            <width>70</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>GO</string>
+                    </property>
+                </widget>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>comboBoxGameStates</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>300</width>
+                            <height>28</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButtonGameState_Stop</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>90</x>
+                            <y>50</y>
+                            <width>70</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>STOP</string>
+                    </property>
+                </widget>
+                <widget class="QCheckBox">
+                    <property name="name">
+                        <cstring>checkBoxInGame</cstring>
+                    </property>
+                    <property name="enabled">
+                        <bool>true</bool>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>170</x>
+                            <y>50</y>
+                            <width>140</width>
+                            <height>21</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Roboter aktiviert</string>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox2</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>90</y>
+                        <width>120</width>
+                        <height>50</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Eigene Spielhälfte</string>
+                </property>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>comboBoxOwnHalf</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>100</width>
+                            <height>28</height>
+                        </rect>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QGroupBox">
+                <property name="name">
+                    <cstring>groupBox4</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>0</x>
+                        <y>140</y>
+                        <width>320</width>
+                        <height>50</height>
+                    </rect>
+                </property>
+                <property name="title">
+                    <string>Spieler Typ</string>
+                </property>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>comboBoxPlayer</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>300</width>
+                            <height>28</height>
+                        </rect>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QCheckBox">
+                <property name="name">
+                    <cstring>checkBoxRemoteControl</cstring>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>140</x>
+                        <y>110</y>
+                        <width>120</width>
+                        <height>20</height>
+                    </rect>
+                </property>
+                <property name="text">
+                    <string>Remote Control</string>
+                </property>
+            </widget>
+        </widget>
+        <widget class="QWidget">
+            <property name="name">
+                <cstring>TabPage</cstring>
+            </property>
+            <attribute name="title">
+                <string>Eigenschaften</string>
+            </attribute>
+            <widget class="QTable">
+                <property name="name">
+                    <cstring>tableRP</cstring>
+                </property>
+                <property name="enabled">
+                    <bool>true</bool>
+                </property>
+                <property name="geometry">
+                    <rect>
+                        <x>10</x>
+                        <y>10</y>
+                        <width>270</width>
+                        <height>100</height>
+                    </rect>
+                </property>
+                <property name="sizePolicy">
+                    <sizepolicy>
+                        <hsizetype>0</hsizetype>
+                        <vsizetype>0</vsizetype>
+                        <horstretch>0</horstretch>
+                        <verstretch>0</verstretch>
+                    </sizepolicy>
+                </property>
+                <property name="numRows">
+                    <number>8</number>
+                </property>
+                <property name="numCols">
+                    <number>1</number>
+                </property>
+                <property name="showGrid">
+                    <bool>false</bool>
+                </property>
+                <property name="readOnly">
+                    <bool>true</bool>
+                </property>
+                <property name="selectionMode">
+                    <enum>NoSelection</enum>
+                </property>
+            </widget>
+        </widget>
+    </widget>
+</widget>
+<menubar>
+    <property name="name">
+        <cstring>qt_dead_widget_MenuBarEditor</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>339</width>
+            <height>25</height>
+        </rect>
+    </property>
+    <item text="Fenster" name="unnamed">
+        <action name="fensterSpielfeld_VisualisierungAction"/>
+        <action name="fensterJoystick_DialogAction"/>
+        <action name="fensterRobot_DataAction"/>
+    </item>
+    <separator/>
+</menubar>
+<toolbars>
+</toolbars>
+<actions>
+    <action>
+        <property name="name">
+            <cstring>new_itemAction</cstring>
+        </property>
+        <property name="text">
+            <string>new item</string>
+        </property>
+        <property name="menuText">
+            <string>new item</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fensterSpielfeld_VisualisierungAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="on">
+            <bool>true</bool>
+        </property>
+        <property name="enabled">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>Spielfeld Visualisierung</string>
+        </property>
+        <property name="menuText">
+            <string>Spielfeld Visualisierung</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fensterJoystick_DialogAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>Joystick Dialog</string>
+        </property>
+        <property name="menuText">
+            <string>Joystick Dialog</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>fensterRobot_DataAction</cstring>
+        </property>
+        <property name="toggleAction">
+            <bool>true</bool>
+        </property>
+        <property name="text">
+            <string>Robot Data</string>
+        </property>
+        <property name="menuText">
+            <string>Robot Data</string>
+        </property>
+    </action>
+    <action>
+        <property name="name">
+            <cstring>Action</cstring>
+        </property>
+        <property name="text">
+            <string>Unnamed</string>
+        </property>
+    </action>
+</actions>
+<connections>
+    <connection>
+        <sender>comboBoxGameStates</sender>
+        <signal>activated(int)</signal>
+        <receiver>Form1</receiver>
+        <slot>sendNewGameState(int)</slot>
+    </connection>
+    <connection>
+        <sender>pushButtonGameState_Go</sender>
+        <signal>pressed()</signal>
+        <receiver>Form1</receiver>
+        <slot>setNewGameStateGO()</slot>
+    </connection>
+    <connection>
+        <sender>pushButtonGameState_Stop</sender>
+        <signal>pressed()</signal>
+        <receiver>Form1</receiver>
+        <slot>setNewGameStateStop()</slot>
+    </connection>
+    <connection>
+        <sender>comboBoxOwnHalf</sender>
+        <signal>activated(int)</signal>
+        <receiver>Form1</receiver>
+        <slot>sendNewOwnHalf(int)</slot>
+    </connection>
+    <connection>
+        <sender>comboBoxIP</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>Form1</receiver>
+        <slot>initiateCom(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>spinBoxPort</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>Form1</receiver>
+        <slot>portChanged(int)</slot>
+    </connection>
+    <connection>
+        <sender>spinBoxComCycle</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>Form1</receiver>
+        <slot>changeComCyclusTime(int)</slot>
+    </connection>
+    <connection>
+        <sender>fensterSpielfeld_VisualisierungAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>Form1</receiver>
+        <slot>showFieldVis(bool)</slot>
+    </connection>
+    <connection>
+        <sender>fensterJoystick_DialogAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>Form1</receiver>
+        <slot>showJoyDiag(bool)</slot>
+    </connection>
+    <connection>
+        <sender>comboBoxPlayer</sender>
+        <signal>activated(const QString&amp;)</signal>
+        <receiver>Form1</receiver>
+        <slot>sendNewPlayerType(const QString&amp;)</slot>
+    </connection>
+    <connection>
+        <sender>fensterRobot_DataAction</sender>
+        <signal>toggled(bool)</signal>
+        <receiver>Form1</receiver>
+        <slot>showRobotDataVis(bool)</slot>
+    </connection>
+    <connection>
+        <sender>checkBoxInGame</sender>
+        <signal>clicked()</signal>
+        <receiver>Form1</receiver>
+        <slot>send_in_game()</slot>
+    </connection>
+</connections>
+<includes>
+    <include location="local" impldecl="in declaration">tribotsUdpCommunication.h</include>
+    <include location="local" impldecl="in declaration">../../Structures/Journal.h</include>
+    <include location="global" impldecl="in declaration">iostream</include>
+    <include location="local" impldecl="in declaration">../../Structures/GameState.h</include>
+    <include location="global" impldecl="in declaration">qtimer.h</include>
+    <include location="local" impldecl="in declaration">../../Structures/FieldGeometry.h</include>
+    <include location="local" impldecl="in declaration">./fieldWidget.h</include>
+    <include location="local" impldecl="in declaration">FieldWidgetDialog.h</include>
+    <include location="local" impldecl="in declaration">JoystickDialog.h</include>
+    <include location="local" impldecl="in declaration">realrobotdataview.h</include>
+    <include location="local" impldecl="in implementation">remoteClientForm.ui.h</include>
+</includes>
+<variables>
+    <variable>Tribots::RobotData rd;</variable>
+    <variable>RealRobotDataView * rdv;</variable>
+    <variable>JoystickDialog * jsd;</variable>
+    <variable>int port;</variable>
+    <variable>Tribots::RobotProperties robotProperties;</variable>
+    <variable>Tribots::FieldGeometry fieldGeometry;</variable>
+    <variable>bool comEstablished;</variable>
+    <variable>QTimer *comTimer;</variable>
+    <variable>Tribots::TribotsUdpCommunication * the_communication;</variable>
+    <variable>Tribots::GameState gameState;</variable>
+    <variable>int ownHalf;</variable>
+    <variable>bool comInitiated;</variable>
+    <variable>int newVariable;</variable>
+    <variable>Tribots::BallLocation ballLocation;</variable>
+    <variable>Tribots::RobotLocation robotLocation;</variable>
+    <variable>FieldWidgetDialog * fwd;</variable>
+    <variable>int comCyclusTime;</variable>
+    <variable>char playerType[200];</variable>
+    <variable>std::vector&lt;std::string&gt; ptl;</variable>
+</variables>
+<slots>
+    <slot access="protected">comm()</slot>
+    <slot access="protected">update_view()</slot>
+    <slot access="protected">sendNewGameState( int _gs )</slot>
+    <slot access="protected">setNewGameStateGO()</slot>
+    <slot access="protected">setNewGameStateStop()</slot>
+    <slot access="protected">send_in_game()</slot>
+    <slot access="protected">sendNewOwnHalf( int _oh )</slot>
+    <slot>initiateCom( const QString &amp; ip )</slot>
+    <slot>stopCom()</slot>
+    <slot access="protected">portChanged( int _port )</slot>
+    <slot access="protected">changeComCyclusTime( int ms )</slot>
+    <slot access="protected">showFieldVis( bool s )</slot>
+    <slot access="protected">showJoyDiag( bool s )</slot>
+    <slot>sendNewPlayerType( const QString &amp; pt )</slot>
+    <slot access="protected">showRobotDataVis( bool s )</slot>
+    <slot>sendSLHint3( float x_mm, float y_mm, float heading_rad )</slot>
+    <slot>sendSLHint2( float x_mm, float y_mm )</slot>
+    <slot access="protected">update_form()</slot>
+</slots>
+<functions>
+    <function>init()</function>
+    <function>destroy()</function>
+</functions>
+<pixmapinproject/>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>
